@@ -19,6 +19,11 @@ SRC_URI += "http://download.tensorflow.org/example_images/flower_photos.tgz;name
 SRC_URI[flower.md5sum] = "6f87fb78e9cc9ab41eff2015b380011d"
 SRC_URI[flower.sha256sum] = "4c54ace7911aaffe13a365c34f650e71dd5bf1be0a58b464e5a7183e3e595d9c"
 
+# Model mobilenet_v1_0.50_224_frozen.tgz
+SRC_URI += "http://download.tensorflow.org/models/mobilenet_v1_0.50_${IMAGE_SIZE}_frozen.tgz;name=mobilenet;"
+SRC_URI[mobilenet.md5sum] = "aaed1fa724dda3e137d26a69a8c219f2"
+SRC_URI[mobilenet.sha256sum] = "0901218facf3d30ae6d8829e0ab6a4f952f7a5b51d6fda0fb15c92838ec55265"
+
 DEPENDS += " \
     tensorflow-native \
     python3-numpy-native \
@@ -46,6 +51,14 @@ do_install[vardeps] += "SAMPLE_IMAGES"
 
 RETRAIN_DATASET ??= "${WORKDIR}/flower_photos"
 SAMPLE_IMAGES ??= "${WORKDIR}/flower_photos/daisy/3475870145_685a19116d.jpg"
+
+do_unpack[postfuncs] += "download_mobilenet_tarball"
+download_mobilenet_tarball () {
+    if [ ! -e ${S}/tf_files/models/mobilenet_v1_0.50_${IMAGE_SIZE}_frozen.tgz ]; then
+        mkdir -p ${S}/tf_files/models
+        cp ${DL_DIR}/mobilenet_v1_0.50_${IMAGE_SIZE}_frozen.tgz ${S}/tf_files/models
+    fi
+}
 
 do_compile () {
     ${PYTHON} -m scripts.retrain \
