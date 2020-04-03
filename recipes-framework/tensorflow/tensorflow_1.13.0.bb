@@ -14,13 +14,13 @@ SRC_URI = "git://github.com/tensorflow/tensorflow.git;branch=r1.13 \
            file://0001-label_image.lite-tweak-default-model-location.patch \
            file://0001-use-local-bazel-to-workaround-bazel-paralle-issue.patch \
            file://0001-CheckFeatureOrDie-use-warning-to-avoid-die.patch \
-           file://0001-grpc-Define-gettid-only-for-glibc-2.30.patch \
            file://BUILD \
            file://BUILD.yocto_compiler \
            file://CROSSTOOL.tpl \
            file://yocto_compiler_configure.bzl \
            file://0001-fix-compilation-error.patch \
            file://0001-Fix-TensorFlow-on-Python-3.8-logger-issue.patch \
+           file://0001-Rename-gettid-functions.patch \
           "
 
 S = "${WORKDIR}/git"
