@@ -1,0 +1,33 @@
+From e00e75dc8bc3c1153633e1ba7cb98a0a58658e86 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Sat, 4 Apr 2020 12:48:01 +0800
+Subject: [PATCH] fix unzip: command not found
+
+If host does not provide unzip, build bazel will fail even though
+Yocto native sysroot does have unzip.
+
+The reason is var-PATH was not passed to bazel build in some cases.
+
+Upstream-Status: Inappropriate [wr-installer specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ .../devtools/build/lib/bazel/rules/BazelRuleClassProvider.java  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/com/google/devtools/build/lib/bazel/rules/BazelRuleClassProvider.java b/src/main/java/com/google/devtools/build/lib/bazel/rules/BazelRuleClassProvider.java
+index fc4aad75..e1686732 100755
+--- a/src/main/java/com/google/devtools/build/lib/bazel/rules/BazelRuleClassProvider.java
++++ b/src/main/java/com/google/devtools/build/lib/bazel/rules/BazelRuleClassProvider.java
+@@ -420,7 +420,7 @@ public class BazelRuleClassProvider {
+     // from the local machine. For now, this can be overridden with --action_env=PATH=<value>, so
+     // at least there's a workaround.
+     if (os != OS.WINDOWS) {
+-      return "/bin:/usr/bin";
++      return "/bin:/usr/bin:" + System.getenv("PATH");
+     }
+ 
+     // Attempt to compute the MSYS root (the real Windows path of "/") from `sh`.
+-- 
+2.17.1
+
