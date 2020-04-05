@@ -77,7 +77,6 @@ build --jobs=${@oe.utils.cpu_count()}
 test --verbose_failures --verbose_test_summary
 test --spawn_strategy=standalone --genrule_strategy=standalone
 
-build --linkopt=-Wl,-latomic
 build --linkopt=-Wl,--no-as-needed
 build --host_linkopt=-Wl,--no-as-needed
 
