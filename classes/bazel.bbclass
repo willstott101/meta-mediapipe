@@ -82,6 +82,8 @@ build --host_linkopt=-Wl,--no-as-needed
 
 build --strip=never
 
+build --python_path=python3
+
 fetch --distdir=${TS_DL_DIR}
 build --distdir=${TS_DL_DIR}
 
