@@ -9,9 +9,10 @@ SRC_URI = "https://github.com/bazelbuild/bazel/releases/download/${PV}/bazel-${P
            file://0001-HttpDownloader-save-download-tarball-to-distdir.patch \
            file://0001-Rename-gettid-functions.patch \
            file://0001-fix-unzip-command-not-found.patch \
+           file://0001-python3.patch \
 "
 
-inherit native pythonnative
+inherit native python3native
 
 INHIBIT_SYSROOT_STRIP = "1"
 
@@ -27,7 +28,7 @@ do_compile () {
     export JAVA_HOME="${STAGING_LIBDIR_NATIVE}/jvm/openjdk-8-native"
     TMPDIR="${TOPDIR}/bazel" \
     VERBOSE=yes \
-    EXTRA_BAZEL_ARGS="--distdir=${TS_DL_DIR}" \
+    EXTRA_BAZEL_ARGS="--distdir=${TS_DL_DIR} --python_path=python3" \
     ./compile.sh
 }
 
