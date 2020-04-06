@@ -33,10 +33,6 @@ URI: git://github.com/openembedded/meta-openembedded.git
 layers: meta-python, meta-oe
 branch: master
 revision: HEAD
-
-URI: git://git.openembedded.org/meta-python2
-branch: master
-revision: HEAD
 ```
 ### 2. Based on Wind River Linux
 Wind River Linux (CI/CD branch)
