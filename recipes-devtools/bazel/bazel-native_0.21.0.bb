@@ -16,6 +16,8 @@ inherit native python3native
 
 INHIBIT_SYSROOT_STRIP = "1"
 
+CCACHE_DISABLE = "1"
+
 DEPENDS = "coreutils-native \
            zip-native \
            openjdk-8-native \
