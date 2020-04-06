@@ -95,6 +95,8 @@ bazel_do_configure_append_class-target () {
     cat >> "${S}/bazelrc" <<-EOF
 # FLAGS
 build ${@bazel_get_flags(d)}
+build --linkopt=-Wl,-latomic
+
 EOF
 
     sed -i "s:${WORKDIR}:${BAZEL_OUTPUTBASE_DIR}/external/yocto_compiler:g" ${S}/bazelrc
