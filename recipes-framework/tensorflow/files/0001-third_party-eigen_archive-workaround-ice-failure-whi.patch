@@ -1,0 +1,80 @@
+From dc5a05a06ad107141a9914635cd96bf7d60b9c25 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Mon, 6 Apr 2020 16:09:01 +0800
+Subject: [PATCH] third_party/eigen_archive:workaround ice failure while
+ building from source with gcc 7.3.1
+
+The root cause is gcc ice issue:
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=89752
+
+But we could not patch on native gcc,so try to workaround,
+Refer: https://github.com/tensorflow/tensorflow/issues/25323
+
+Upstream-Status: Inappropriate [wr-installer specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ tensorflow/workspace.bzl                      |  1 +
+ ...ailure-while-building-from-source-wi.patch | 38 +++++++++++++++++++
+ 2 files changed, 39 insertions(+)
+ create mode 100644 third_party/systemlibs/0001-workaround-ice-failure-while-building-from-source-wi.patch
+
+diff --git a/tensorflow/workspace.bzl b/tensorflow/workspace.bzl
+index 66679e686d..983f6a19b4 100755
+--- a/tensorflow/workspace.bzl
++++ b/tensorflow/workspace.bzl
+@@ -138,6 +138,7 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
+         build_file = clean_dep("//third_party:eigen.BUILD"),
+         sha256 = "753fbb58d0a49b6bcbcfb126ebfa2e21fc97f7471529ba835a096008ce588d8a",
+         strip_prefix = "eigen-eigen-9f48e814419e",
++        patch_file = clean_dep("//third_party/systemlibs:0001-workaround-ice-failure-while-building-from-source-wi.patch"),
+         urls = [
+             "https://mirror.bazel.build/bitbucket.org/eigen/eigen/get/9f48e814419e.tar.gz",
+             "https://bitbucket.org/eigen/eigen/get/9f48e814419e.tar.gz",
+diff --git a/third_party/systemlibs/0001-workaround-ice-failure-while-building-from-source-wi.patch b/third_party/systemlibs/0001-workaround-ice-failure-while-building-from-source-wi.patch
+new file mode 100644
+index 0000000000..d6c06b61e6
+--- /dev/null
++++ b/third_party/systemlibs/0001-workaround-ice-failure-while-building-from-source-wi.patch
+@@ -0,0 +1,38 @@
++From c6748051ee8a5526801ce2070856061eb82ebe12 Mon Sep 17 00:00:00 2001
++From: Hongxu Jia <hongxu.jia@windriver.com>
++Date: Mon, 6 Apr 2020 15:55:21 +0800
++Subject: [PATCH] workaround ice failure while building from source with gcc
++ 7.3.1
++
++The root cause is gcc ice issue:
++https://gcc.gnu.org/bugzilla/show_bug.cgi?id=89752
++
++But we could not patch on native gcc,so try to workaround,
++Refer: https://github.com/tensorflow/tensorflow/issues/25323
++
++Upstream-Status: Inappropriate [wr-installer specific]
++
++Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
++---
++ unsupported/Eigen/CXX11/src/Tensor/TensorReduction.h | 4 +++-
++ 1 file changed, 3 insertions(+), 1 deletion(-)
++
++diff --git a/unsupported/Eigen/CXX11/src/Tensor/TensorReduction.h b/unsupported/Eigen/CXX11/src/Tensor/TensorReduction.h
++index bda1147..e2d7113 100644
++--- a/unsupported/Eigen/CXX11/src/Tensor/TensorReduction.h
+++++ b/unsupported/Eigen/CXX11/src/Tensor/TensorReduction.h
++@@ -798,8 +798,10 @@ struct TensorEvaluator<const TensorReductionOp<Op, Dims, ArgType, MakePointer_>,
++       const Index firstIndex = firstInput(index);
++       for (Index i = 0; i < PacketSize; ++i) {
++         Op reducer(m_reducer);
++-        values[i] = internal::InnerMostDimReducer<Self, Op>::reduce(*this, firstIndex + i * num_values_to_reduce,
+++        Self::CoeffReturnType a = internal::InnerMostDimReducer<Self, Op>::reduce(*this, firstIndex + i * num_values_to_reduce,
++                                                                     num_values_to_reduce, reducer);
+++        values[i] = a;
+++
++       }
++     } else if (PreservingInnerMostDims) {
++       const Index firstIndex = firstInput(index);
++-- 
++2.17.1
++
+-- 
+2.17.1
+
