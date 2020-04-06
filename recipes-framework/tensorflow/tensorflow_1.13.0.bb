@@ -196,13 +196,8 @@ INSANE_SKIP_${PN} += "dev-so \
                      "
 FILES_${PN} += "${libdir}/* ${datadir}/*"
 
-inherit siteinfo
-UNSUPPORTED_TARGET_ARCH = "powerpc"
+inherit siteinfo unsupportarch
 python __anonymous() {
-    target_arch = d.getVar("TARGET_ARCH")
-    if target_arch in d.getVar("UNSUPPORTED_TARGET_ARCH").split():
-        raise bb.parse.SkipPackage("TensorFlow does not support Target Arch '%s'" % target_arch)
-
     if d.getVar("SITEINFO_ENDIANNESS") == 'be':
         msg =  "\nIt failed to use pre-build model to do predict/inference on big-endian platform"
         msg += "\n(such as qemumips), since upstream does not support big-endian very well."

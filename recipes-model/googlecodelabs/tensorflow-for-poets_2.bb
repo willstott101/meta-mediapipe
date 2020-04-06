@@ -99,3 +99,5 @@ do_install () {
 }
 
 FILES_${PN} += "${libdir}/* ${datadir}/*"
+
+inherit unsupportarch

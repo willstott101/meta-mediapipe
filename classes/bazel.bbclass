@@ -105,3 +105,5 @@ EOF
 EXPORT_FUNCTIONS do_configure
 
 CCACHE_DISABLE = "1"
+
+inherit unsupportarch
