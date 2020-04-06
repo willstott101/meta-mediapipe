@@ -8,6 +8,8 @@ Yocto native sysroot does have unzip.
 
 The reason is var-PATH was not passed to bazel build in some cases.
 
+Remove hardcoded /bin and /usr/bin from PATH
+
 Upstream-Status: Inappropriate [wr-installer specific]
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
@@ -24,7 +26,7 @@ index fc4aad75..e1686732 100755
      // at least there's a workaround.
      if (os != OS.WINDOWS) {
 -      return "/bin:/usr/bin";
-+      return "/bin:/usr/bin:" + System.getenv("PATH");
++      return System.getenv("PATH");
      }
  
      // Attempt to compute the MSYS root (the real Windows path of "/") from `sh`.
