@@ -132,6 +132,7 @@ toolchain {
   # absolute locations and has no remote execution, yet. However, this will need
   # to be fixed, maybe with auto-detection?
   cxx_builtin_include_directory: "/usr/lib/gcc/"
+  cxx_builtin_include_directory: "/usr/lib64/gcc/"
   cxx_builtin_include_directory: "/usr/local/include"
   cxx_builtin_include_directory: "/usr/include"
   cxx_builtin_include_directory: "%%YOCTO_COMPILER_PATH%%/recipe-sysroot-native/usr/include"
