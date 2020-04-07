@@ -1,29 +1,16 @@
-DESCRIPTION = "TensorFlow C/C++ Libraries"
-LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
+include tensorflow.inc
 
-DEPENDS = "bazel-native protobuf-native util-linux-native protobuf"
-SRCREV = "c8875cbb1341f6ca14dd0ec908f1dde7d67f7808"
-SRC_URI = "git://github.com/tensorflow/tensorflow.git;branch=r1.13 \
+SRC_URI += " \
            file://0001-add-yocto-toolchain-to-support-cross-compiling.patch \
-           file://0001-SyntaxError-around-async-keyword-on-Python-3.7.patch \
-           file://0001-support-musl.patch \
            file://0001-fix-build-tensorflow-lite-examples-label_image-label.patch \
            file://0001-label_image-tweak-default-model-location.patch \
            file://0001-label_image.lite-tweak-default-model-location.patch \
-           file://0001-use-local-bazel-to-workaround-bazel-paralle-issue.patch \
            file://0001-CheckFeatureOrDie-use-warning-to-avoid-die.patch \
            file://BUILD \
            file://BUILD.yocto_compiler \
            file://CROSSTOOL.tpl \
            file://yocto_compiler_configure.bzl \
-           file://0001-fix-compilation-error.patch \
-           file://0001-Fix-TensorFlow-on-Python-3.8-logger-issue.patch \
-           file://0001-Rename-gettid-functions.patch \
-           file://0001-third_party-eigen_archive-workaround-ice-failure-whi.patch \
           "
-
-S = "${WORKDIR}/git"
 
 SRC_URI += "https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz;name=model-inv3"
 SRC_URI[model-inv3.md5sum] = "a904ddf15593d03c7dd786d552e22d73"
@@ -32,15 +19,6 @@ SRC_URI[model-inv3.sha256sum] = "7045b72a954af4dce36346f478610acdccbf149168fa25c
 SRC_URI += "https://storage.googleapis.com/download.tensorflow.org/models/tflite/mobilenet_v1_1.0_224_quant_and_labels.zip;name=model-mobv1"
 SRC_URI[model-mobv1.md5sum] = "38ac0c626947875bd311ef96c8baab62"
 SRC_URI[model-mobv1.sha256sum] = "2f8054076cf655e1a73778a49bd8fd0306d32b290b7e576dda9574f00f186c0f"
-
-DEPENDS += " \
-    python3 \
-    python3-numpy-native \
-    python3-keras-applications-native \
-    python3-keras-preprocessing-native \
-    python3-pip-native \
-    python3-wheel-native \
-"
 
 RDEPENDS_${PN} += " \
     python3 \
@@ -57,21 +35,9 @@ RDEPENDS_${PN} += " \
     tensorflow-estimator \
 "
 
-inherit python3native bazel
-
 export PYTHON_BIN_PATH="${PYTHON}"
 export PYTHON_LIB_PATH="${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages"
 
-TF_CONFIG ?= " \
-    TF_NEED_CUDA=0 \
-    TF_NEED_OPENCL_SYCL=0 \
-    TF_NEED_OPENCL=0 \
-    TF_CUDA_CLANG=0 \
-    TF_DOWNLOAD_CLANG=0 \
-    TF_ENABLE_XLA=0 \
-    TF_NEED_MPI=0 \
-    TF_SET_ANDROID_WORKSPACE=0 \
-"
 do_configure_append () {
     CROSSTOOL_PYTHON_INCLUDE_PATH="${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}"
     if [ ! -e ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig-target.h ];then
