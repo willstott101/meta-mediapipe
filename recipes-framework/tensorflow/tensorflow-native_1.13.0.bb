@@ -18,8 +18,6 @@ do_compile () {
         --verbose_explanations --verbose_failures \
         --verbose_failures \
         //tensorflow/tools/pip_package:build_pip_package
-
-    ${BAZEL} shutdown
 }
 
 do_install() {

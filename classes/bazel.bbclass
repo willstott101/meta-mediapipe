@@ -8,6 +8,7 @@ BAZEL_OUTPUTBASE_DIR ?= "${BAZEL_DIR}/output_base"
 export BAZEL_ARGS="--output_user_root=${BAZEL_DIR}/user_root \
                    --output_base=${BAZEL_OUTPUTBASE_DIR} \
                    --bazelrc=${S}/bazelrc \
+                   --batch  \
                   "
 
 export JAVA_HOME="${STAGING_LIBDIR_NATIVE}/jvm/openjdk-8-native"

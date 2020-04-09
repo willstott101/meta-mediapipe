@@ -52,8 +52,6 @@ do_compile () {
         --crosstool_top=@local_config_yocto_compiler//:toolchain \
         --verbose_failures \
         //tensorboard/pip_package:build_pip_package
-
-    ${BAZEL} shutdown
 }
 
 do_install () {

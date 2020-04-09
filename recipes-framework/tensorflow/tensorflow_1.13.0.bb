@@ -98,8 +98,6 @@ do_compile () {
         tensorflow/examples/label_image/... \
         //tensorflow/lite/examples/label_image:label_image \
         ${TF_TARGET_EXTRA}
-
-    ${BAZEL} shutdown
 }
 
 do_install() {

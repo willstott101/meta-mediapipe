@@ -32,8 +32,6 @@ do_compile () {
         --python_path="${PYTHON}" \
         //tensorflow_estimator/tools/pip_package:build_pip_package
 
-    ${BAZEL} shutdown
-
     PYTHON_BIN_PATH="${PYTHON}" \
     ${S}/bazel-bin/tensorflow_estimator/tools/pip_package/build_pip_package \
         ${WORKDIR}/estimator_pip
