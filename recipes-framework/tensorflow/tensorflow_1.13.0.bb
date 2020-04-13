@@ -147,7 +147,7 @@ do_install() {
     (
         cd ${D}${PYTHON_SITEPACKAGES_DIR}/bin;
         for app in `ls`; do
-            sed -i "s:^'''exec' ${STAGING_BINDIR_NATIVE}/nativepython3 :'''exec' /usr/bin/python3 :g" $app
+            sed -i "s:${STAGING_BINDIR_NATIVE}/nativepython3:/usr/bin/python3:g" $app
             mv $app ${D}${sbindir}
         done
 
