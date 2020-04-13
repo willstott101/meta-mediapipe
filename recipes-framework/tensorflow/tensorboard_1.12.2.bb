@@ -16,6 +16,7 @@ S = "${WORKDIR}/git"
 DEPENDS = "util-linux-native"
 
 RDEPENDS_${PN} += "python3 \
+           python3-core \
            python3-numpy \
            python3-protobuf \
            python3-grpcio \

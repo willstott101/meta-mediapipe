@@ -22,6 +22,7 @@ SRC_URI[model-mobv1.sha256sum] = "2f8054076cf655e1a73778a49bd8fd0306d32b290b7e57
 
 RDEPENDS_${PN} += " \
     python3 \
+    python3-core \
     python3-numpy \
     python3-keras-applications \
     python3-keras-preprocessing \
