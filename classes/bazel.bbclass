@@ -70,12 +70,12 @@ def bazel_get_flags(d):
     return flags
 
 TS_DL_DIR ??= "${DL_DIR}"
-BAZEL_JOBS ??= "${@oe.utils.cpu_count()}"
+BAZEL_JOBS ??= "4"
 bazel_do_configure () {
     cat > "${S}/bazelrc" <<-EOF
 build --verbose_failures
 build --spawn_strategy=standalone --genrule_strategy=standalone
-build --jobs=${BAZEL_JOBS}
+build --jobs=${BAZEL_JOBS} --local_resources=4096,${BAZEL_JOBS},1.0
 test --verbose_failures --verbose_test_summary
 test --spawn_strategy=standalone --genrule_strategy=standalone
 
