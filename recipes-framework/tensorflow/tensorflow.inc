@@ -12,6 +12,7 @@ SRC_URI = "git://github.com/tensorflow/tensorflow.git;branch=r1.13 \
            file://0001-Fix-TensorFlow-on-Python-3.8-logger-issue.patch \
            file://0001-Rename-gettid-functions.patch \
            file://0001-third_party-eigen_archive-workaround-ice-failure-whi.patch \
+           file://0001-Provide-overload-to-cope-with-const-ness-change-of-N.patch \
           "
 
 S = "${WORKDIR}/git"
