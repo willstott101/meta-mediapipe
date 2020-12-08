@@ -1,18 +1,13 @@
 DESCRIPTION = "TensorFlow C/C++ Libraries"
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=64a34301f8e355f57ec992c2af3e5157"
 
 DEPENDS = "bazel-native protobuf-native util-linux-native protobuf"
-SRCREV = "c8875cbb1341f6ca14dd0ec908f1dde7d67f7808"
-SRC_URI = "git://github.com/tensorflow/tensorflow.git;branch=r1.13 \
-           file://0001-SyntaxError-around-async-keyword-on-Python-3.7.patch \
+SRCREV = "97c3fef64ba9937a52af2d72fb4104b6e541d4b2"
+SRC_URI = "git://github.com/tensorflow/tensorflow.git;branch=r2.4 \
            file://0001-support-musl.patch \
            file://0001-use-local-bazel-to-workaround-bazel-paralle-issue.patch \
-           file://0001-fix-compilation-error.patch \
-           file://0001-Fix-TensorFlow-on-Python-3.8-logger-issue.patch \
-           file://0001-Rename-gettid-functions.patch \
            file://0001-third_party-eigen_archive-workaround-ice-failure-whi.patch \
-           file://0001-Provide-overload-to-cope-with-const-ness-change-of-N.patch \
           "
 
 S = "${WORKDIR}/git"

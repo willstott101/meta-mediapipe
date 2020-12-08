@@ -1,6 +1,6 @@
-From ecc7014fe42ac0bc7bc502f2671a8da09c90d6ea Mon Sep 17 00:00:00 2001
+From 71e1fc302b41523aa4852ddf780cb2a42cf03f20 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
-Date: Wed, 13 Mar 2019 17:55:08 +0800
+Date: Tue, 8 Dec 2020 17:11:48 +0800
 Subject: [PATCH] use local bazel to workaround bazel paralle issue
 
 Upstream-Status: Inappropriate [oe specific]
@@ -11,18 +11,18 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure.py b/configure.py
-index 4f8cae2..2121a90 100644
+index b4907775d93..2a85871e52e 100644
 --- a/configure.py
 +++ b/configure.py
-@@ -454,7 +454,7 @@ def check_bazel_version(min_version, max_version):
-     print('Cannot find bazel. Please install bazel.')
-     sys.exit(0)
-   curr_version = run_shell(
--      ['bazel', '--batch', '--bazelrc=/dev/null', 'version'])
-+      ['../bazel/bazel', '--batch', '--bazelrc=/dev/null', 'version'])
+@@ -480,7 +480,7 @@ def check_bazel_version(min_version, max_version):
+     sys.exit(1)
  
-   for line in curr_version.split('\n'):
-     if 'Build label: ' in line:
+   stderr = open(os.devnull, 'wb')
+-  curr_version = run_shell(['bazel', '--version'],
++  curr_version = run_shell(['../bazel/bazel', '--version'],
+                            allow_non_zero=True,
+                            stderr=stderr)
+   if curr_version.startswith('bazel '):
 -- 
-2.7.4
+2.18.2
 

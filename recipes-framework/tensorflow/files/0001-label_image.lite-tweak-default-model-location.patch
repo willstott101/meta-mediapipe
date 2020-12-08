@@ -1,32 +1,35 @@
-From 6d519e53de0a47cebb72111608f7424d7585c6bb Mon Sep 17 00:00:00 2001
+From dd73bef88a23d29299bc6e2f3c892ed81d65a86c Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
-Date: Tue, 5 Mar 2019 22:06:34 -0500
+Date: Wed, 9 Dec 2020 09:53:30 +0800
 Subject: [PATCH] label_image.lite: tweak default model location
 
 Upstream-Status: Inappropriate [oe specific]
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
- tensorflow/lite/examples/label_image/label_image.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tensorflow/lite/examples/label_image/label_image.h | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/tensorflow/lite/examples/label_image/label_image.h b/tensorflow/lite/examples/label_image/label_image.h
-index 88b047f..c541fec 100644
+index 1c00edb6558..a5bcf8c64d8 100644
 --- a/tensorflow/lite/examples/label_image/label_image.h
 +++ b/tensorflow/lite/examples/label_image/label_image.h
-@@ -29,9 +29,9 @@ struct Settings {
+@@ -34,10 +34,12 @@ struct Settings {
    int loop_count = 1;
    float input_mean = 127.5f;
    float input_std = 127.5f;
 -  string model_name = "./mobilenet_quant_v1_224.tflite";
++  string model_name = "/usr/share/label_image/mobilenet_v1_1.0_224_quant.tflite";
+   tflite::FlatBufferModel* model;
 -  string input_bmp_name = "./grace_hopper.bmp";
 -  string labels_file_name = "./labels.txt";
-+  string model_name = "/usr/share/label_image/mobilenet_v1_1.0_224_quant.tflite";
 +  string input_bmp_name = "/usr/share/label_image/grace_hopper.bmp";
 +  string labels_file_name = "/usr/share/label_image/labels_mobilenet_quant_v1_224.txt";
-   string input_layer_type = "uint8_t";
++
++
    int number_of_threads = 4;
    int number_of_results = 5;
+   int max_profiling_buffer_entries = 1024;
 -- 
-2.8.1
+2.18.2
 

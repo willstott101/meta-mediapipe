@@ -30,6 +30,7 @@ RDEPENDS_${PN} += " \
     python3-grpcio \
     python3-absl \
     python3-astor \
+    python3-astunparse \
     python3-gast \
     python3-termcolor \
     tensorboard \
