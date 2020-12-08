@@ -1,6 +1,6 @@
-From e00e75dc8bc3c1153633e1ba7cb98a0a58658e86 Mon Sep 17 00:00:00 2001
+From 23e2aff67a03127572641c7286e306c2a20990e2 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
-Date: Sat, 4 Apr 2020 12:48:01 +0800
+Date: Tue, 8 Dec 2020 11:05:13 +0800
 Subject: [PATCH] fix unzip: command not found
 
 If host does not provide unzip, build bazel will fail even though
@@ -18,18 +18,18 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/main/java/com/google/devtools/build/lib/bazel/rules/BazelRuleClassProvider.java b/src/main/java/com/google/devtools/build/lib/bazel/rules/BazelRuleClassProvider.java
-index fc4aad75..e1686732 100755
+index 16252df..e7cd609 100755
 --- a/src/main/java/com/google/devtools/build/lib/bazel/rules/BazelRuleClassProvider.java
 +++ b/src/main/java/com/google/devtools/build/lib/bazel/rules/BazelRuleClassProvider.java
-@@ -420,7 +420,7 @@ public class BazelRuleClassProvider {
-     // from the local machine. For now, this can be overridden with --action_env=PATH=<value>, so
-     // at least there's a workaround.
-     if (os != OS.WINDOWS) {
--      return "/bin:/usr/bin";
+@@ -469,7 +469,7 @@ public class BazelRuleClassProvider {
+       // Note that --action_env does not propagate to the host config, so it is not a viable
+       // workaround when a genrule is itself built in the host config (e.g. nested genrules). See
+       // #8536.
+-      return "/bin:/usr/bin:/usr/local/bin";
 +      return System.getenv("PATH");
      }
  
-     // Attempt to compute the MSYS root (the real Windows path of "/") from `sh`.
+     String newPath = "";
 -- 
-2.17.1
+2.18.2
 

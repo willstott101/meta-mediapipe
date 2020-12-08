@@ -2,12 +2,11 @@ DESCRIPTION = "Bazel build and test tool"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI[md5sum] = "8c8240b178a35c0f3c1bc03017550270"
-SRC_URI[sha256sum] = "6ccb831e683179e0cfb351cb11ea297b4db48f9eab987601c038aa0f83037db4"
+SRC_URI[md5sum] = "381ca27503c566ce5e489d1ba07d1d25"
+SRC_URI[sha256sum] = "d7f40d0cac95a06cea6cb5b7f7769085257caebc3ee84269dd9298da760d5615"
 
 SRC_URI = "https://github.com/bazelbuild/bazel/releases/download/${PV}/bazel-${PV}-dist.zip \
            file://0001-HttpDownloader-save-download-tarball-to-distdir.patch \
-           file://0001-Rename-gettid-functions.patch \
            file://0001-fix-unzip-command-not-found.patch \
            file://0001-python3.patch \
 "
@@ -30,7 +29,7 @@ do_compile () {
     export JAVA_HOME="${STAGING_LIBDIR_NATIVE}/jvm/openjdk-8-native"
     TMPDIR="${TOPDIR}/bazel" \
     VERBOSE=yes \
-    EXTRA_BAZEL_ARGS="--distdir=${TS_DL_DIR} --python_path=python3" \
+    EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk --python_path=python3" \
     ./compile.sh
 }
 
