@@ -3,13 +3,13 @@ builds using source code from OpenJDK project"
 LICENSE = "GPL-2.0-with-classpath-exception"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3e0b59f8fac05c3c03d4a26bbda13f8f"
 
-SRC_URI[md5sum] = "8082ad8dafec378f2a4b24cbfdb4a9a4"
-SRC_URI[sha256sum] = "ef6a3050a1c3477a6e13c24d10ab36decad548649a260559d466467401db15de"
+SRC_URI[md5sum] = "52c1f769ab67b58b4300713fb5d46a47"
+SRC_URI[sha256sum] = "fccaa6cc14571813dbb427ac08d5acd034782a2654e6090ad4d63e7200011ac4"
 SRC_URI = " \
-    https://github.com/ojdkbuild/contrib_jdk8u-ci/releases/download/jdk8u212-b04/jdk-8u212-ojdkbuild-linux-x64.zip \
+    https://github.com/ojdkbuild/contrib_jdk8u-ci/releases/download/jdk8u275-b01/jdk-8u275-ojdkbuild-linux-x64.zip \
 "
 
-S = "${WORKDIR}/jdk-8u212-ojdkbuild-linux-x64"
+S = "${WORKDIR}/jdk-8u275-ojdkbuild-linux-x64"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
