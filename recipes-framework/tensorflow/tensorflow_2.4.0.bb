@@ -6,9 +6,11 @@ SRC_URI += " \
            file://0001-label_image-tweak-default-model-location.patch \
            file://0001-label_image.lite-tweak-default-model-location.patch \
            file://0001-CheckFeatureOrDie-use-warning-to-avoid-die.patch \
-           file://BUILD \
+           file://0001-support-32-bit-x64-and-arm-for-yocto.patch \
+           file://BUILD.in \
            file://BUILD.yocto_compiler \
            file://CROSSTOOL.tpl \
+           file://cc_config.bzl.tpl \
            file://yocto_compiler_configure.bzl \
           "
 
@@ -33,6 +35,11 @@ RDEPENDS_${PN} += " \
     python3-astunparse \
     python3-gast \
     python3-termcolor \
+    python3-wrapt \
+    python3-opt-einsum \
+    python3-google-pasta \
+    python3-typing-extensions \
+    flatbuffers-python3 \
     tensorboard \
     tensorflow-estimator \
 "
@@ -40,8 +47,9 @@ RDEPENDS_${PN} += " \
 export PYTHON_BIN_PATH="${PYTHON}"
 export PYTHON_LIB_PATH="${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages"
 
+export CROSSTOOL_PYTHON_INCLUDE_PATH="${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}"
+
 do_configure_append () {
-    CROSSTOOL_PYTHON_INCLUDE_PATH="${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}"
     if [ ! -e ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig-target.h ];then
         mv ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig.h ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig-target.h
     fi
@@ -61,8 +69,10 @@ do_configure_append () {
 ENDOF
 
     mkdir -p ${S}/third_party/toolchains/yocto/
-    install -m 644 ${WORKDIR}/BUILD ${S}/third_party/toolchains/yocto/
+    sed "s#%%CPU%%#${BAZEL_TARGET_CPU}#g" ${WORKDIR}/BUILD.in  > ${S}/third_party/toolchains/yocto/BUILD
+    chmod 644 ${S}/third_party/toolchains/yocto/BUILD
     install -m 644 ${WORKDIR}/CROSSTOOL.tpl ${S}/third_party/toolchains/yocto/
+    install -m 644 ${WORKDIR}/cc_config.bzl.tpl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/yocto_compiler_configure.bzl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/BUILD.yocto_compiler ${S}
 
@@ -82,14 +92,16 @@ ENDOF
 TF_ARGS_EXTRA ??= ""
 TF_TARGET_EXTRA ??= ""
 do_compile () {
+    export CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
     unset CC
     ${BAZEL} build \
         ${TF_ARGS_EXTRA} \
         -c opt \
-        --cpu=armeabi \
+        --cpu=${BAZEL_TARGET_CPU} \
         --subcommands --explain=${T}/explain.log \
         --verbose_explanations --verbose_failures \
         --crosstool_top=@local_config_yocto_compiler//:toolchain \
+        --host_crosstool_top=@bazel_tools//tools/cpp:toolchain \
         --verbose_failures \
         --copt -DTF_LITE_DISABLE_X86_NEON \
         //tensorflow:libtensorflow.so \
@@ -159,6 +171,7 @@ do_install() {
 
 FILES_${PN}-dev = ""
 INSANE_SKIP_${PN} += "dev-so \
+                      already-stripped \
                      "
 FILES_${PN} += "${libdir}/* ${datadir}/*"
 

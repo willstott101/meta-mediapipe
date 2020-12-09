@@ -1,0 +1,129 @@
+From 52b0c97764b65e4351aa2005217b0827d94b842f Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Sat, 12 Dec 2020 21:41:29 +0800
+Subject: [PATCH] support 32 bit x64 and arm for yocto
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ tensorflow/BUILD                              |  1 -
+ tensorflow/workspace.bzl                      |  1 +
+ .../0001-XNNPACK-support-32-bit-x86.patch     | 29 +++++++++++++++++++
+ third_party/aws/BUILD.bazel                   |  6 ++++
+ third_party/aws/aws-c-common.bazel            |  9 ++++++
+ third_party/cpuinfo/BUILD.bazel               |  1 -
+ 6 files changed, 45 insertions(+), 2 deletions(-)
+ create mode 100644 third_party/0001-XNNPACK-support-32-bit-x86.patch
+
+diff --git a/tensorflow/BUILD b/tensorflow/BUILD
+index 85e172afa03..4d2d90cd755 100644
+--- a/tensorflow/BUILD
++++ b/tensorflow/BUILD
+@@ -86,7 +86,6 @@ config_setting(
+ config_setting(
+     name = "android_x86",
+     values = {
+-        "crosstool_top": "//external:android/crosstool",
+         "cpu": "x86",
+     },
+     visibility = ["//visibility:public"],
+diff --git a/tensorflow/workspace.bzl b/tensorflow/workspace.bzl
+index f6c47187c54..fce3c53fff0 100755
+--- a/tensorflow/workspace.bzl
++++ b/tensorflow/workspace.bzl
+@@ -140,6 +140,7 @@ def tf_repositories(path_prefix = "", tf_repo_name = ""):
+         name = "XNNPACK",
+         sha256 = "4b199c96fb2d551450b48eb5549843b41c023ad200aa86760a7c56d0dc0da806",
+         strip_prefix = "XNNPACK-68447302abcfad0d4b6b19a1efe7d7eef8833f4a",
++        patch_file = clean_dep("//third_party:0001-XNNPACK-support-32-bit-x86.patch"),
+         urls = [
+             "https://storage.googleapis.com/mirror.tensorflow.org/github.com/google/XNNPACK/archive/68447302abcfad0d4b6b19a1efe7d7eef8833f4a.zip",
+             "https://github.com/google/XNNPACK/archive/68447302abcfad0d4b6b19a1efe7d7eef8833f4a.zip",
+diff --git a/third_party/0001-XNNPACK-support-32-bit-x86.patch b/third_party/0001-XNNPACK-support-32-bit-x86.patch
+new file mode 100644
+index 00000000000..9e9ae3bb554
+--- /dev/null
++++ b/third_party/0001-XNNPACK-support-32-bit-x86.patch
+@@ -0,0 +1,29 @@
++From be12104d25bf9a74daeabd6eae388291196ebdc1 Mon Sep 17 00:00:00 2001
++From: Hongxu Jia <hongxu.jia@windriver.com>
++Date: Fri, 11 Dec 2020 23:29:23 +0800
++Subject: [PATCH] XNNPACK: support 32 bit x86
++
++Use android_x86 as a workaround to support 32 bit x86
++
++Upstream-Status: Inappropriate [oe specific]
++
++Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
++---
++ BUILD.bazel | 1 -
++ 1 file changed, 1 deletion(-)
++
++diff --git a/BUILD.bazel b/BUILD.bazel
++index ec7d05a..be0beba 100644
++--- a/BUILD.bazel
+++++ b/BUILD.bazel
++@@ -6475,7 +6475,6 @@ config_setting(
++ config_setting(
++     name = "android_x86",
++     values = {
++-        "crosstool_top": "//external:android/crosstool",
++         "cpu": "x86",
++     },
++ )
++-- 
++2.18.2
++
+diff --git a/third_party/aws/BUILD.bazel b/third_party/aws/BUILD.bazel
+index e1058edaba4..a86591997f3 100644
+--- a/third_party/aws/BUILD.bazel
++++ b/third_party/aws/BUILD.bazel
+@@ -33,6 +33,12 @@ cc_library(
+         "@org_tensorflow//tensorflow:yocto_armeabi": glob([
+             "aws-cpp-sdk-core/source/platform/linux-shared/*.cpp",
+         ]),
++        "@org_tensorflow//tensorflow:android_x86": glob([
++            "aws-cpp-sdk-core/source/platform/linux-shared/*.cpp",
++        ]),
++        "@org_tensorflow//tensorflow:arm": glob([
++            "aws-cpp-sdk-core/source/platform/linux-shared/*.cpp",
++        ]),
+         "//conditions:default": [],
+     }) + select({
+         "//conditions:default": glob([
+diff --git a/third_party/aws/aws-c-common.bazel b/third_party/aws/aws-c-common.bazel
+index ab9406805c2..d1078b0d701 100644
+--- a/third_party/aws/aws-c-common.bazel
++++ b/third_party/aws/aws-c-common.bazel
+@@ -12,6 +12,15 @@ load("@org_tensorflow//third_party:common.bzl", "template_rule")
+ cc_library(
+     name = "aws-c-common",
+     srcs = select({
++        "@org_tensorflow//tensorflow:arm": glob([
++            "source/posix/*.c",
++        ]),
++        "@org_tensorflow//tensorflow:android_x86": glob([
++            "source/posix/*.c",
++        ]),
++        "@org_tensorflow//tensorflow:yocto_armeabi": glob([
++            "source/posix/*.c",
++        ]),
+         "@org_tensorflow//tensorflow:linux_aarch64": glob([
+             "source/posix/*.c",
+         ]),
+diff --git a/third_party/cpuinfo/BUILD.bazel b/third_party/cpuinfo/BUILD.bazel
+index 9b007cc0daa..1fca02facfc 100644
+--- a/third_party/cpuinfo/BUILD.bazel
++++ b/third_party/cpuinfo/BUILD.bazel
+@@ -248,7 +248,6 @@ config_setting(
+ config_setting(
+     name = "android_x86",
+     values = {
+-        "crosstool_top": "//external:android/crosstool",
+         "cpu": "x86",
+     },
+     visibility = ["//visibility:public"],
+-- 
+2.18.2
+

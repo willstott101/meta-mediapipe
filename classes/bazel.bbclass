@@ -75,12 +75,15 @@ bazel_do_configure () {
     cat > "${S}/bazelrc" <<-EOF
 build --verbose_failures
 build --spawn_strategy=standalone --genrule_strategy=standalone
-buuld --jobs=${BAZEL_JOBS} --local_ram_resources=4096 --local_cpu_resources=${BAZEL_JOBS}
+build --jobs=${BAZEL_JOBS} --local_ram_resources=4096 --local_cpu_resources=${BAZEL_JOBS}
 test --verbose_failures --verbose_test_summary
 test --spawn_strategy=standalone --genrule_strategy=standalone
 
 build --linkopt=-Wl,--no-as-needed
 build --host_linkopt=-Wl,--no-as-needed
+
+build --host_conlyopt=-D_PYTHON_INCLUDE_NATIVE --host_cxxopt=-D_PYTHON_INCLUDE_NATIVE
+build --conlyopt=-D_PYTHON_INCLUDE_TARGET --cxxopt=-D_PYTHON_INCLUDE_TARGET
 
 build --strip=never
 
@@ -107,6 +110,8 @@ EOF
 EXPORT_FUNCTIONS do_configure
 
 CCACHE_DISABLE = "1"
+
+PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/bazel"
 
 inherit unsupportarch
 
