@@ -3,9 +3,10 @@ learning programming."
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
 
-SRC_URI = "git://github.com/tensorflow/estimator.git;branch=r1.13 \
+SRC_URI = "git://github.com/tensorflow/estimator.git;branch=r2.4 \
+           file://0001-customize-for-yocto.patch \
           "
-SRCREV = "340703eed78ba4854862f749ed94f91598826e79"
+SRCREV = "c3e7f2b5bbcc35185ef71797955a28cadce28f60"
 S = "${WORKDIR}/git"
 
 inherit python3native bazel
@@ -19,12 +20,18 @@ DEPENDS += " \
     python3-astor-native \
     python3-gast-native \
     python3-termcolor-native \
+    python3-wrapt-native \
+    python3-opt-einsum-native \
+    python3-astunparse-native \
+    flatbuffers-native \
     tensorflow-native \
 "
 
 do_compile () {
     unset CC
     export TMPDIR="${WORKDIR}"
+    export PYTHON_BIN_PATH="${PYTHON}"
+
     ${BAZEL} build \
         --subcommands --explain=${T}/explain.log \
         --verbose_explanations --verbose_failures \
@@ -32,7 +39,6 @@ do_compile () {
         --python_path="${PYTHON}" \
         //tensorflow_estimator/tools/pip_package:build_pip_package
 
-    PYTHON_BIN_PATH="${PYTHON}" \
     ${S}/bazel-bin/tensorflow_estimator/tools/pip_package/build_pip_package \
         ${WORKDIR}/estimator_pip
 }

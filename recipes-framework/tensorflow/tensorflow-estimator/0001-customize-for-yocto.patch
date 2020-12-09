@@ -1,0 +1,28 @@
+From a1bcf09a43fc44ad5e04c441ee45cc23d16cf7d2 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 9 Dec 2020 17:59:01 +0800
+Subject: [PATCH] customize for yocto
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ tensorflow_estimator/tools/pip_package/build_pip_package.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tensorflow_estimator/tools/pip_package/build_pip_package.sh b/tensorflow_estimator/tools/pip_package/build_pip_package.sh
+index d4953a6..e08cd8a 100755
+--- a/tensorflow_estimator/tools/pip_package/build_pip_package.sh
++++ b/tensorflow_estimator/tools/pip_package/build_pip_package.sh
+@@ -38,7 +38,7 @@ function prepare_src() {
+ 
+   # Verifies all expected files are in pip.
+   # Creates init files in all directory in pip.
+-  python tensorflow_estimator/tools/pip_package/create_pip_helper.py --pip-root "${TMPDIR}/tensorflow_estimator/" --bazel-root "./tensorflow_estimator"
++  nativepython3 tensorflow_estimator/tools/pip_package/create_pip_helper.py --pip-root "${TMPDIR}/tensorflow_estimator/" --bazel-root "./tensorflow_estimator"
+ }
+ 
+ function build_wheel() {
+-- 
+2.18.2
+
