@@ -26,11 +26,21 @@ DEPENDS = "coreutils-native \
 S="${WORKDIR}"
 
 TS_DL_DIR ??= "${DL_DIR}"
+
+BAZEL_JOBS ??= "4"
+EXTRA_BAZEL_ARGS = " \
+    --host_javabase=@local_jdk//:jdk \
+    --python_path=python3 \
+    --jobs=${BAZEL_JOBS} \
+    --local_ram_resources=4096 \
+    --local_cpu_resources=${BAZEL_JOBS} \
+"
+
 do_compile () {
     export JAVA_HOME="${STAGING_LIBDIR_NATIVE}/jvm/openjdk-8-native"
     TMPDIR="${TOPDIR}/bazel" \
     VERBOSE=yes \
-    EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk --python_path=python3" \
+    EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS}" \
     ./compile.sh
 }
 

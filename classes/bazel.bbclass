@@ -75,7 +75,7 @@ bazel_do_configure () {
     cat > "${S}/bazelrc" <<-EOF
 build --verbose_failures
 build --spawn_strategy=standalone --genrule_strategy=standalone
-build --jobs=${BAZEL_JOBS} --local_resources=4096,${BAZEL_JOBS},1.0
+buuld --jobs=${BAZEL_JOBS} --local_ram_resources=4096 --local_cpu_resources=${BAZEL_JOBS}
 test --verbose_failures --verbose_test_summary
 test --spawn_strategy=standalone --genrule_strategy=standalone
 
