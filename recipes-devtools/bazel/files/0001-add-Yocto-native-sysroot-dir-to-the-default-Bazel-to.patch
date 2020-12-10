@@ -1,0 +1,39 @@
+From 707ba08068432262b3d02b29804c00afe7133ff6 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Thu, 10 Dec 2020 16:12:51 +0800
+Subject: [PATCH] add Yocto native sysroot dir to the default Bazel toolchain
+
+While using the default Bazel C++ toolchain to build Yocto native tools
+(bazel build --host_crosstool_top=@bazel_tools//tools/cpp:toolchain),
+it failed `bazel references a path outside of the execution root',
+
+Add Yocto native sysroot dir (YOCTO_NATIVE_SYSROOT) to
+builtin_include_directories could fix the issue
+
+If not set YOCTO_NATIVE_SYSROOT, use NOT_SET_YOCTO_NATIVE_SYSROOT
+to replace as a warning
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ tools/cpp/unix_cc_configure.bzl | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/cpp/unix_cc_configure.bzl b/tools/cpp/unix_cc_configure.bzl
+index 84f5479..e17aa9d 100755
+--- a/tools/cpp/unix_cc_configure.bzl
++++ b/tools/cpp/unix_cc_configure.bzl
+@@ -424,6 +424,9 @@ def configure_unix_toolchain(repository_ctx, cpu_value, overriden_tools):
+         ),
+     )
+ 
++    # Customize for Yocto
++    builtin_include_directories.append(get_env_var(repository_ctx,"YOCTO_NATIVE_SYSROOT", "NOT_SET_YOCTO_NATIVE_SYSROOT"))
++
+     write_builtin_include_directory_paths(repository_ctx, cc, builtin_include_directories)
+     repository_ctx.template(
+         "BUILD",
+-- 
+2.18.2
+

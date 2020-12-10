@@ -109,3 +109,5 @@ EXPORT_FUNCTIONS do_configure
 CCACHE_DISABLE = "1"
 
 inherit unsupportarch
+
+export YOCTO_NATIVE_SYSROOT="${BAZEL_OUTPUTBASE_DIR}/external/yocto_compiler/recipe-sysroot-native"
