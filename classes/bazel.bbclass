@@ -75,7 +75,7 @@ bazel_do_configure () {
     cat > "${S}/bazelrc" <<-EOF
 build --verbose_failures
 build --spawn_strategy=standalone --genrule_strategy=standalone
-build --jobs=${BAZEL_JOBS} --local_ram_resources=4096 --local_cpu_resources=${BAZEL_JOBS}
+#build --jobs=${BAZEL_JOBS} --local_ram_resources=4096 --local_cpu_resources=${BAZEL_JOBS}
 test --verbose_failures --verbose_test_summary
 test --spawn_strategy=standalone --genrule_strategy=standalone
 
@@ -116,3 +116,13 @@ PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/bazel"
 inherit unsupportarch
 
 export YOCTO_NATIVE_SYSROOT="${BAZEL_OUTPUTBASE_DIR}/external/yocto_compiler/recipe-sysroot-native"
+
+do_clean[prefuncs] += "clean_bazel"
+clean_bazel() {
+    if [ -d ${S} ]; then
+        cd ${S}
+        if [ -e ${BAZEL} ] && [ -e ${S}/bazelrc ]; then
+            ${BAZEL} clean
+        fi
+    fi
+}
