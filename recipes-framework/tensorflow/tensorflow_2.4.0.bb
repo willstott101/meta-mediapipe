@@ -120,8 +120,6 @@ do_install() {
         ${D}${libdir}
     install -m 644 ${S}/bazel-bin/tensorflow/libtensorflow_cc.so \
         ${D}${libdir}
-    install -m 644 ${S}/bazel-bin/tensorflow/libtensorflow_framework.so \
-        ${D}${libdir}
 
     install -d ${D}${sbindir}
     install -m 755 ${S}/bazel-bin/tensorflow/tools/benchmark/benchmark_model \
@@ -165,7 +163,7 @@ do_install() {
             mv $app ${D}${sbindir}
         done
 
-        rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/tensorflow/libtensorflow_framework.so
+        mv ${D}${PYTHON_SITEPACKAGES_DIR}/tensorflow/libtensorflow_framework.so*  ${D}${libdir}
     )
 }
 
