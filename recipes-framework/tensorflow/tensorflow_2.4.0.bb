@@ -9,7 +9,6 @@ SRC_URI += " \
            file://0001-support-32-bit-x64-and-arm-for-yocto.patch \
            file://BUILD.in \
            file://BUILD.yocto_compiler \
-           file://CROSSTOOL.tpl \
            file://cc_config.bzl.tpl \
            file://yocto_compiler_configure.bzl \
           "
@@ -71,7 +70,6 @@ ENDOF
     mkdir -p ${S}/third_party/toolchains/yocto/
     sed "s#%%CPU%%#${BAZEL_TARGET_CPU}#g" ${WORKDIR}/BUILD.in  > ${S}/third_party/toolchains/yocto/BUILD
     chmod 644 ${S}/third_party/toolchains/yocto/BUILD
-    install -m 644 ${WORKDIR}/CROSSTOOL.tpl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/cc_config.bzl.tpl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/yocto_compiler_configure.bzl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/BUILD.yocto_compiler ${S}
@@ -82,7 +80,6 @@ ENDOF
     SED_COMMAND="${SED_COMMAND}; s#%%YOCTO_COMPILER_PATH%%#${BAZEL_OUTPUTBASE_DIR}/external/yocto_compiler#g"
 
     sed -i "${SED_COMMAND}" ${S}/BUILD.yocto_compiler \
-                            ${S}/third_party/toolchains/yocto/CROSSTOOL.tpl \
                             ${S}/WORKSPACE
 
     ${TF_CONFIG} \
