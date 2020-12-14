@@ -3,6 +3,8 @@ DEPENDS += "bazel-native \
           "
 DEPENDS_append_class-target = " python3"
 
+inherit bazel-base
+
 BAZEL_DIR ?= "${WORKDIR}/bazel"
 BAZEL_OUTPUTBASE_DIR ?= "${BAZEL_DIR}/output_base"
 export BAZEL_ARGS="--output_user_root=${BAZEL_DIR}/user_root \
@@ -10,8 +12,6 @@ export BAZEL_ARGS="--output_user_root=${BAZEL_DIR}/user_root \
                    --bazelrc=${S}/bazelrc \
                    --batch  \
                   "
-
-export JAVA_HOME="${STAGING_LIBDIR_NATIVE}/jvm/openjdk-8-native"
 
 BAZEL ?= "${BAZEL_DIR}/bazel"
 
@@ -26,56 +26,64 @@ do_install_bazel() {
 def bazel_get_flags(d):
     flags = ""
     for i in d.getVar("CC").split()[1:]:
-        flags += "--conlyopt=%s --cxxopt=%s --linkopt=%s " % (i, i, i)
+        flags += "# From CC\n"
+        flags += "build --conlyopt=%s --cxxopt=%s --linkopt=%s\n" % (i, i, i)
 
     for i in d.getVar("CFLAGS").split():
         if i == "-g":
             continue
-        flags += "--conlyopt=%s " % i
+        flags += "# From CFLAGS\n"
+        flags += "build --conlyopt=%s\n" % i
 
     for i in d.getVar("BUILD_CFLAGS").split():
-        flags += "--host_conlyopt=%s " % i
+        flags += "# From BUILD_CFLAGS\n"
+        flags += "build --host_conlyopt=%s\n" % i
 
     for i in d.getVar("CXXFLAGS").split():
         if i == "-g":
             continue
-        flags += "--cxxopt=%s " % i
+        flags += "# From CXXFLAGS\n"
+        flags += "build --cxxopt=%s\n" % i
 
     for i in d.getVar("BUILD_CXXFLAGS").split():
-        flags += "--host_cxxopt=%s " % i
+        flags += "# From BUILD_CXXFLAGS\n"
+        flags += "build --host_cxxopt=%s\n" % i
 
     for i in d.getVar("CPPFLAGS").split():
         if i == "-g":
             continue
-        flags += "--conlyopt=%s --cxxopt=%s " % (i, i)
+        flags += "# From CPPFLAGS\n"
+        flags += "build --conlyopt=%s --cxxopt=%s\n" % (i, i)
 
     for i in d.getVar("BUILD_CPPFLAGS").split():
-        flags += "--host_conlyopt=%s --host_cxxopt=%s " % (i, i)
+        flags += "# From BUILD_CPPFLAGS\n"
+        flags += "build --host_conlyopt=%s --host_cxxopt=%s\n" % (i, i)
 
     for i in d.getVar("LDFLAGS").split():
         if i == "-Wl,--as-needed":
             continue
-        flags += "--linkopt=%s " % i
+        flags += "# From LDFLAGS\n"
+        flags += "build --linkopt=%s\n" % i
 
     for i in d.getVar("BUILD_LDFLAGS").split():
         if i == "-Wl,--as-needed":
             continue
-        flags += "--host_linkopt=%s " % i
+        flags += "# From BUILD_LDFLAGS\n"
+        flags += "build --host_linkopt=%s\n" % i
 
     for i in d.getVar("TOOLCHAIN_OPTIONS").split():
         if i == "-Wl,--as-needed":
             continue
-        flags += "--linkopt=%s " % i
+        flags += "# From TOOLCHAIN_OPTIONS\n"
+        flags += "build --linkopt=%s\n" % i
 
     return flags
 
-TS_DL_DIR ??= "${DL_DIR}"
-BAZEL_JOBS ??= "4"
 bazel_do_configure () {
     cat > "${S}/bazelrc" <<-EOF
 build --verbose_failures
 build --spawn_strategy=standalone --genrule_strategy=standalone
-#build --jobs=${BAZEL_JOBS} --local_ram_resources=4096 --local_cpu_resources=${BAZEL_JOBS}
+build --jobs=${BAZEL_JOBS} --local_ram_resources=${BAZEL_MEM} --local_cpu_resources=${BAZEL_JOBS}
 test --verbose_failures --verbose_test_summary
 test --spawn_strategy=standalone --genrule_strategy=standalone
 
@@ -98,8 +106,10 @@ EOF
 
 bazel_do_configure_append_class-target () {
     cat >> "${S}/bazelrc" <<-EOF
-# FLAGS
-build ${@bazel_get_flags(d)}
+# FLAGS begin
+${@bazel_get_flags(d)}
+# FLAGS end
+
 build --linkopt=-Wl,-latomic
 
 EOF
@@ -108,8 +118,6 @@ EOF
 }
 
 EXPORT_FUNCTIONS do_configure
-
-CCACHE_DISABLE = "1"
 
 PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/bazel"
 
@@ -125,4 +133,5 @@ clean_bazel() {
             ${BAZEL} clean
         fi
     fi
+    rm ${BAZEL_DIR} -rf
 }
