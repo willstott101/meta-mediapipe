@@ -77,13 +77,20 @@ def bazel_get_flags(d):
         flags += "# From TOOLCHAIN_OPTIONS\n"
         flags += "build --linkopt=%s\n" % i
 
+    if d.getVar("BAZEL_JOBS"):
+        flags += "# From BAZEL_JOBS\n"
+        flags += "build --jobs=%s --local_cpu_resources=%s\n" % (d.getVar("BAZEL_JOBS"), d.getVar("BAZEL_JOBS"))
+
+    if d.getVar("BAZEL_MEM"):
+        flags += "# From BAZEL_MEM\n"
+        flags += "build --local_ram_resources=%s\n" % (d.getVar("BAZEL_MEM"))
+
     return flags
 
 bazel_do_configure () {
     cat > "${S}/bazelrc" <<-EOF
 build --verbose_failures
 build --spawn_strategy=standalone --genrule_strategy=standalone
-build --jobs=${BAZEL_JOBS} --local_ram_resources=${BAZEL_MEM} --local_cpu_resources=${BAZEL_JOBS}
 test --verbose_failures --verbose_test_summary
 test --spawn_strategy=standalone --genrule_strategy=standalone
 

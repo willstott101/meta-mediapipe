@@ -30,9 +30,9 @@ inherit bazel-base
 EXTRA_BAZEL_ARGS = " \
     --host_javabase=@local_jdk//:jdk \
     --python_path=python3 \
-    --jobs=${BAZEL_JOBS} \
-    --local_ram_resources=${BAZEL_MEM} \
-    --local_cpu_resources=${BAZEL_JOBS} \
+    ${@oe.utils.conditional("BAZEL_JOBS", "", "", "--jobs=${BAZEL_JOBS}", d )} \
+    ${@oe.utils.conditional("BAZEL_JOBS", "", "", "--local_cpu_resources=${BAZEL_JOBS}", d )} \
+    ${@oe.utils.conditional("BAZEL_MEM", "", "", "--local_ram_resources=${BAZEL_MEM}", d )} \
 "
 
 do_compile () {
