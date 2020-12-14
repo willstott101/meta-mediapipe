@@ -2,8 +2,8 @@ DESCRIPTION = "Bazel build and test tool"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI[md5sum] = "381ca27503c566ce5e489d1ba07d1d25"
-SRC_URI[sha256sum] = "d7f40d0cac95a06cea6cb5b7f7769085257caebc3ee84269dd9298da760d5615"
+SRC_URI[md5sum] = "cc255121586e849c4de2483a8a5814b6"
+SRC_URI[sha256sum] = "c9244e5905df6b0190113e26082c72d58b56b1b0dec66d076f083ce4089b0307"
 
 SRC_URI = "https://github.com/bazelbuild/bazel/releases/download/${PV}/bazel-${PV}-dist.zip \
            file://0001-HttpDownloader-save-download-tarball-to-distdir.patch \

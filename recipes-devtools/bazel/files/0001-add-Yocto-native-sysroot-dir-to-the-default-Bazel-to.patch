@@ -1,6 +1,6 @@
-From 707ba08068432262b3d02b29804c00afe7133ff6 Mon Sep 17 00:00:00 2001
+From 34c4dc1a10140addf75d3503d4b9f427303fe212 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
-Date: Thu, 10 Dec 2020 16:12:51 +0800
+Date: Mon, 14 Dec 2020 16:45:31 +0800
 Subject: [PATCH] add Yocto native sysroot dir to the default Bazel toolchain
 
 While using the default Bazel C++ toolchain to build Yocto native tools
@@ -21,12 +21,12 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/tools/cpp/unix_cc_configure.bzl b/tools/cpp/unix_cc_configure.bzl
-index 84f5479..e17aa9d 100755
+index d48485b..0d297bf 100755
 --- a/tools/cpp/unix_cc_configure.bzl
 +++ b/tools/cpp/unix_cc_configure.bzl
-@@ -424,6 +424,9 @@ def configure_unix_toolchain(repository_ctx, cpu_value, overriden_tools):
-         ),
-     )
+@@ -443,6 +443,9 @@ def configure_unix_toolchain(repository_ctx, cpu_value, overriden_tools):
+             paths["@bazel_tools//tools/cpp:generate_system_module_map.sh"],
+         ))
  
 +    # Customize for Yocto
 +    builtin_include_directories.append(get_env_var(repository_ctx,"YOCTO_NATIVE_SYSROOT", "NOT_SET_YOCTO_NATIVE_SYSROOT"))
