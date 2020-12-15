@@ -168,7 +168,20 @@ FILES_${PN}-dev = ""
 INSANE_SKIP_${PN} += "dev-so \
                       already-stripped \
                      "
-FILES_${PN} += "${libdir}/* ${datadir}/*"
+
+PACKAGE_BEFORE_PN += "libtensorflow-c libtensorflow-framework label-image label-image-lite python3-tensorflow"
+
+RDEPENDS_label-image += "libtensorflow-framework"
+RDEPENDS_python3-tensorflow += "libtensorflow-framework"
+RDEPENDS_${PN} += "libtensorflow-c libtensorflow-framework label-image label-image-lite python3-tensorflow"
+
+ALLOW_EMPTY_${PN} = "1"
+
+FILES_python3-tensorflow += "${libdir}/* ${datadir}/* ${sbindir}/*"
+FILES_libtensorflow-c = "${libdir}/libtensorflow.so ${libdir}/libtensorflow_cc.so"
+FILES_libtensorflow-framework = "${libdir}/libtensorflow.so ${libdir}/libtensorflow_framework.so*"
+FILES_label-image = "${sbindir}/label_image"
+FILES_label-image-lite = "${sbindir}/label_image.lite"
 
 inherit siteinfo unsupportarch
 python __anonymous() {
