@@ -9,7 +9,13 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 inherit pypi
 
-SRC_URI[md5sum] = "0440718247cc4531422e2a8f4f012e8b"
-SRC_URI[sha256sum] = "0f7c6a64927d34c1a474da92cfc59e552a5d3b940d3266606c6a28b72888b9e4"
+SRC_URI[md5sum] = "d1f8a9284283b8db69e84c41b36db501"
+SRC_URI[sha256sum] = "0b0e026b412a0ad096e753907559e4bdb180d9ba9f68dd9036164db4fdc4ad2e"
+
+RDEPENDS_${PN} += " \
+    python3-cachetools \
+    python3-rsa \
+    python3-pyasn1-modules \
+"
 
 BBCLASSEXTEND = "native"
