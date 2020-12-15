@@ -41,75 +41,88 @@ $ runqemu qemux86-64 core-image-minimal slirp kvm qemuparams="-m 5120"
 
 ## 5. Verify the install
 ```
-root@qemux86-64:~# python3 -c "import tensorflow as tf; tf.enable_eager_execution(); print(tf.reduce_sum(tf.random_normal([1000, 1000])))"
-tf.Tensor(-604.65454, shape=(), dtype=float32)
+root@qemux86-64:~# python3 -c "import tensorflow as tf;print(tf.reduce_sum(tf.random.normal([1000, 1000])))"
+tf.Tensor(-3304.6208, shape=(), dtype=float32)
 ```
 
 ## 6. Run tutorial case
 ### Refer: https://www.tensorflow.org/tutorials
 ```
-root@qemux86-64:~# cat >code.py <<ENDOF
+root@qemux86-64:~# cat >code-v2.py <<ENDOF
 import tensorflow as tf
 mnist = tf.keras.datasets.mnist
 
-(x_train, y_train),(x_test, y_test) = mnist.load_data()
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
 model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(input_shape=(28, 28)),
-  tf.keras.layers.Dense(512, activation=tf.nn.relu),
+  tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dropout(0.2),
-  tf.keras.layers.Dense(10, activation=tf.nn.softmax)
+  tf.keras.layers.Dense(10)
 ])
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
 
+predictions = model(x_train[:1]).numpy()
+tf.nn.softmax(predictions).numpy()
+loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+loss_fn(y_train[:1], predictions).numpy()
+
+model.compile(optimizer='adam',
+              loss=loss_fn,
+              metrics=['accuracy'])
 model.fit(x_train, y_train, epochs=5)
-model.evaluate(x_test, y_test)
+model.evaluate(x_test,  y_test, verbose=2)
+
+probability_model = tf.keras.Sequential([
+  model,
+  tf.keras.layers.Softmax()
+])
+probability_model(x_test[:5])
+
+
 ENDOF
 
-root@qemux86-64:~# python3 ./code.py
-Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
-11493376/11490434 [==============================] - 7s 1us/step
-Instructions for updating:
-Colocations handled automatically by placer.
-Instructions for updating:
-Please use `rate` instead of `keep_prob`. Rate should be set to `rate = 1 - keep_prob`.
+root@qemux86-64:~# python3 ./code-v2.py
+2020-12-15 08:16:44.171593: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+2020-12-15 08:16:44.184464: I tensorflow/core/platform/profile_utils/cpu_utils.cc:112] CPU Frequency: 3099995000 Hz
 Epoch 1/5
-60000/60000 [==============================] - 27s 449us/sample - loss: 0.2211 - acc: 0.9346
+1875/1875 [==============================] - 14s 7ms/step - loss: 0.4833 - accuracy: 0.8595
 Epoch 2/5
-60000/60000 [==============================] - 24s 408us/sample - loss: 0.0969 - acc: 0.9702
+1875/1875 [==============================] - 13s 7ms/step - loss: 0.1549 - accuracy: 0.9558
 Epoch 3/5
-60000/60000 [==============================] - 26s 439us/sample - loss: 0.0694 - acc: 0.9780
+1875/1875 [==============================] - 13s 7ms/step - loss: 0.1135 - accuracy: 0.9651
 Epoch 4/5
-60000/60000 [==============================] - 23s 390us/sample - loss: 0.0540 - acc: 0.9832
+1875/1875 [==============================] - 13s 7ms/step - loss: 0.0889 - accuracy: 0.9729
 Epoch 5/5
-60000/60000 [==============================] - 24s 399us/sample - loss: 0.0447 - acc: 0.9851
-10000/10000 [==============================] - 1s 91us/sample - loss: 0.0700 - acc: 0.9782
+1875/1875 [==============================] - 13s 7ms/step - loss: 0.0741 - accuracy: 0.9777
+313/313 - 1s - loss: 0.0757 - accuracy: 0.9757
 ```
 ## 7. TensorFlow/TensorFlow Lite C++ Image Recognition Demo
 ```
 root@qemux86-64:~# time label_image
-2019-03-06 06:08:51.076028: I tensorflow/examples/label_image/main.cc:251] military uniform (653): 0.834306
-2019-03-06 06:08:51.078221: I tensorflow/examples/label_image/main.cc:251] mortarboard (668): 0.0218695
-2019-03-06 06:08:51.080054: I tensorflow/examples/label_image/main.cc:251] academic gown (401): 0.010358
-2019-03-06 06:08:51.081943: I tensorflow/examples/label_image/main.cc:251] pickelhaube (716): 0.00800814
-2019-03-06 06:08:51.083830: I tensorflow/examples/label_image/main.cc:251] bulletproof vest (466): 0.00535084
-real    0m 10.50s
-user    0m 3.95s
-sys 0m 6.46s
+2020-12-15 08:18:34.853885: I tensorflow/core/platform/profile_utils/cpu_utils.cc:112] CPU Frequency: 3099995000 Hz
+2020-12-15 08:18:41.565167: I tensorflow/examples/label_image/main.cc:252] military uniform (653): 0.834306
+2020-12-15 08:18:41.567874: I tensorflow/examples/label_image/main.cc:252] mortarboard (668): 0.0218696
+2020-12-15 08:18:41.568936: I tensorflow/examples/label_image/main.cc:252] academic gown (401): 0.0103581
+2020-12-15 08:18:41.569985: I tensorflow/examples/label_image/main.cc:252] pickelhaube (716): 0.00800819
+2020-12-15 08:18:41.571025: I tensorflow/examples/label_image/main.cc:252] bulletproof vest (466): 0.00535086
+
+real	0m7.178s
+user	0m6.101s
+sys	0m0.893s
+
 root@qemux86-64:~# time label_image.lite
-Loaded model /usr/share/label_image/mobilenet_v1_1.0_224_quant.tflite
-resolved reporter
-invoked
-average time: 1064.8 ms
-0.780392: 653 military uniform
-0.105882: 907 Windsor tie
-0.0156863: 458 bow tie
-0.0117647: 466 bulletproof vest
-0.00784314: 835 suit
-real    0m 1.10s
-user    0m 1.07s
-sys 0m 0.02s
+INFO: Loaded model /usr/share/label_image/mobilenet_v1_1.0_224_quant.tflite
+INFO: resolved reporter
+INFO: invoked
+INFO: average time: 213.584 ms
+INFO: 0.780392: 653 military uniform
+INFO: 0.105882: 907 Windsor tie
+INFO: 0.0156863: 458 bow tie
+INFO: 0.0117647: 466 bulletproof vest
+INFO: 0.00784314: 835 suit
+
+real	0m0.233s
+user	0m0.216s
+sys	0m0.012s
 ```
