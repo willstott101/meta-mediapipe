@@ -151,7 +151,7 @@ do_install() {
     install -d ${D}/${PYTHON_SITEPACKAGES_DIR}
     ${STAGING_BINDIR_NATIVE}/pip3 install --disable-pip-version-check -v \
         -t ${D}/${PYTHON_SITEPACKAGES_DIR} --no-cache-dir --no-deps \
-         ${WORKDIR}/tensorflow*.whl
+         ${WORKDIR}/tensorflow-${PV}-*.whl
 
     (
         cd ${D}${PYTHON_SITEPACKAGES_DIR}/bin;
