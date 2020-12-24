@@ -23,7 +23,7 @@ do_install_bazel() {
     zip -A ${BAZEL}.real
 }
 
-def bazel_get_flags(d):
+def bazel_get_target_flags(d):
     flags = ""
     for i in d.getVar("CC").split()[1:]:
         flags += "# From CC\n"
@@ -77,6 +77,11 @@ def bazel_get_flags(d):
         flags += "# From TOOLCHAIN_OPTIONS\n"
         flags += "build --linkopt=%s\n" % i
 
+    return flags
+
+def bazel_get_flags(d):
+    flags = ""
+
     if d.getVar("BAZEL_JOBS"):
         flags += "# From BAZEL_JOBS\n"
         flags += "build --jobs=%s --local_cpu_resources=%s\n" % (d.getVar("BAZEL_JOBS"), d.getVar("BAZEL_JOBS"))
@@ -107,6 +112,8 @@ build --python_path=python3
 fetch --distdir=${TS_DL_DIR}
 build --distdir=${TS_DL_DIR}
 
+${@bazel_get_flags(d)}
+
 EOF
 
 }
@@ -114,7 +121,7 @@ EOF
 bazel_do_configure_append_class-target () {
     cat >> "${S}/bazelrc" <<-EOF
 # FLAGS begin
-${@bazel_get_flags(d)}
+${@bazel_get_target_flags(d)}
 # FLAGS end
 
 build --linkopt=-Wl,-latomic
