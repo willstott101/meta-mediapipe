@@ -8,6 +8,7 @@ SRC_URI = "git://github.com/tensorflow/tensorflow.git;branch=r2.4 \
            file://0001-support-musl.patch \
            file://0001-use-local-bazel-to-workaround-bazel-paralle-issue.patch \
            file://0001-third_party-eigen_archive-workaround-ice-failure-whi.patch \
+           file://0001-drop-bazel_toolchains_repositories-to-support-offlin.patch \
           "
 
 S = "${WORKDIR}/git"

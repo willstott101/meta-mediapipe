@@ -1,0 +1,33 @@
+From b61f9a4a5660023ea13ccf19a411df5b90c7de1b Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Mon, 28 Dec 2020 14:22:33 +0800
+Subject: [PATCH] drop bazel_toolchains_repositories to support offline build
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ WORKSPACE | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/WORKSPACE b/WORKSPACE
+index 9db1d9b80eb..9113db2286b 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -29,13 +29,6 @@ load("//third_party/toolchains/preconfig/generate:archives.bzl",
+ 
+ bazel_toolchains_archive()
+ 
+-load(
+-    "@bazel_toolchains//repositories:repositories.bzl",
+-    bazel_toolchains_repositories = "repositories",
+-)
+-
+-bazel_toolchains_repositories()
+-
+ # Use `swift_rules_dependencies` to fetch the toolchains. With the
+ # `git_repository` rules above, the following call will skip redefining them.
+ load("@build_bazel_rules_swift//swift:repositories.bzl", "swift_rules_dependencies")
+-- 
+2.18.2
+
