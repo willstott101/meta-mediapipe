@@ -139,6 +139,7 @@ inherit unsupportarch
 
 export YOCTO_NATIVE_SYSROOT="${BAZEL_OUTPUTBASE_DIR}/external/yocto_compiler/recipe-sysroot-native"
 
+do_rm_work[prefuncs] += "clean_bazel"
 do_clean[prefuncs] += "clean_bazel"
 clean_bazel() {
     if [ -d ${S} ]; then
