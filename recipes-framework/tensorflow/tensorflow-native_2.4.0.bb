@@ -13,6 +13,7 @@ do_configure_append () {
 do_compile () {
     unset CC
     ${BAZEL} build \
+        ${TF_ARGS_EXTRA} \
         -c opt \
         --subcommands --explain=${T}/explain.log \
         --verbose_explanations --verbose_failures \

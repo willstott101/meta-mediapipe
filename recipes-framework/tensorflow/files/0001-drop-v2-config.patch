@@ -1,0 +1,28 @@
+From a8f4aa60ec6e4a844a031777848fa4f15adf78b2 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Mon, 11 Jan 2021 13:55:44 +0800
+Subject: [PATCH] drop v2 config
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ .bazelrc | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/.bazelrc b/.bazelrc
+index aaf1e10a5c7..d9c54b438cf 100644
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -367,8 +367,6 @@ build:v1 --define=tf_api_version=1
+ build:v2 --define=tf_api_version=2
+ build:v1 --action_env=TF2_BEHAVIOR=0
+ build:v2 --action_env=TF2_BEHAVIOR=1
+-build --config=v2
+-test --config=v2
+ 
+ # Enable XLA
+ build:xla --define=with_xla_support=true
+-- 
+2.18.2
+

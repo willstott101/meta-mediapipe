@@ -86,7 +86,6 @@ ENDOF
     ./configure
 }
 
-TF_ARGS_EXTRA ??= ""
 TF_TARGET_EXTRA ??= ""
 do_compile () {
     export CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
