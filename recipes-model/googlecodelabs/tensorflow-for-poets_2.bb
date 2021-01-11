@@ -100,4 +100,10 @@ do_install () {
 
 FILES_${PN} += "${libdir}/* ${datadir}/*"
 
-inherit unsupportarch
+inherit unsupportarch tensorflow_ver
+
+python __anonymous() {
+    if '--config=v1' not in (d.getVar("TF_ARGS_EXTRA") or "").split() != "x86_64":
+        msg =  "\nIt requires tensorflow 1.x, add 'TF_ARGS_EXTRA = \"--config=v1\"' to local.conf"
+        raise bb.parse.SkipPackage(msg)
+}

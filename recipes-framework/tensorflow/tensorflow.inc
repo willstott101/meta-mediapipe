@@ -36,8 +36,4 @@ TF_CONFIG ?= " \
     TF_SET_ANDROID_WORKSPACE=0 \
 "
 
-# Build tensorflow 2.x by default
-TF_ARGS_EXTRA ??= "--config=v2"
-
-# Uncomment the following line to build tensorflow 1.x
-#TF_ARGS_EXTRA = "--config=v1"
+inherit tensorflow_ver
