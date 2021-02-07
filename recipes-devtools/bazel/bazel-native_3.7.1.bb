@@ -12,7 +12,7 @@ SRC_URI = "https://github.com/bazelbuild/bazel/releases/download/${PV}/bazel-${P
            file://0001-add-Yocto-native-sysroot-dir-to-the-default-Bazel-to.patch \
 "
 
-inherit native python3native
+inherit python3native
 
 INHIBIT_SYSROOT_STRIP = "1"
 
@@ -49,3 +49,5 @@ do_install () {
 
 # Explicitly disable uninative
 UNINATIVE_LOADER = ""
+
+inherit native
