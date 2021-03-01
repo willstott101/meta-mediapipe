@@ -9,3 +9,5 @@ IMAGE_INSTALL += " \
     dhcp-client \
     face-detection \
 "
+
+inherit ts_v1

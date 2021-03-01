@@ -21,3 +21,5 @@ do_install () {
 	install -m 0755 ${WORKDIR}/recognize_face.py ${D}${sbindir}/recognize_face
 	install -m 0755 ${WORKDIR}/collect_face.py ${D}${sbindir}/collect_face
 }
+
+inherit ts_v1

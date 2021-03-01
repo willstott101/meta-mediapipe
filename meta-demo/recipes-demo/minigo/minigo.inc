@@ -13,3 +13,4 @@ PV = "0.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
+inherit ts_v1
