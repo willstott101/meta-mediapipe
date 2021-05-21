@@ -11,6 +11,7 @@ SRC_URI = "git://github.com/tensorflow/tensorflow.git;branch=r2.4 \
            file://0001-drop-bazel_toolchains_repositories-to-support-offlin.patch \
            file://0001-drop-v2-config.patch \
            file://0001-fix-numeric_limits-is-not-a-member-of-std.patch \
+           file://0001-ruy-fix-numeric_limits-is-not-a-member-of-std.patch \
           "
 
 S = "${WORKDIR}/git"
