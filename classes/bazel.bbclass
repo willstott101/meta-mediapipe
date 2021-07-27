@@ -9,8 +9,7 @@ BAZEL_DIR ?= "${WORKDIR}/bazel"
 BAZEL_OUTPUTBASE_DIR ?= "${BAZEL_DIR}/output_base"
 export BAZEL_ARGS="--output_user_root=${BAZEL_DIR}/user_root \
                    --output_base=${BAZEL_OUTPUTBASE_DIR} \
-                   --bazelrc=${S}/bazelrc \
-                   --batch  \
+                   --batch \
                   "
 
 BAZEL ?= "${BAZEL_DIR}/bazel"
@@ -93,8 +92,7 @@ def bazel_get_flags(d):
     return flags
 
 bazel_do_configure () {
-    cat > "${S}/bazelrc" <<-EOF
-build --verbose_failures
+    cat > "${S}/.configure.bazelrc" <<-EOF
 build --spawn_strategy=standalone --genrule_strategy=standalone
 test --verbose_failures --verbose_test_summary
 test --spawn_strategy=standalone --genrule_strategy=standalone
@@ -105,12 +103,9 @@ build --host_linkopt=-Wl,--no-as-needed
 build --host_conlyopt=-D_PYTHON_INCLUDE_NATIVE --host_cxxopt=-D_PYTHON_INCLUDE_NATIVE
 build --conlyopt=-D_PYTHON_INCLUDE_TARGET --cxxopt=-D_PYTHON_INCLUDE_TARGET
 
-build --strip=never
-
 build --python_path=python3
 
-fetch --distdir=${TS_DL_DIR}
-build --distdir=${TS_DL_DIR}
+build --strip=never
 
 ${@bazel_get_flags(d)}
 
@@ -119,7 +114,7 @@ EOF
 }
 
 bazel_do_configure_append_class-target () {
-    cat >> "${S}/bazelrc" <<-EOF
+    cat >> "${S}/.configure.bazelrc" <<-EOF
 # FLAGS begin
 ${@bazel_get_target_flags(d)}
 # FLAGS end
@@ -128,7 +123,7 @@ build --linkopt=-Wl,-latomic
 
 EOF
 
-    sed -i "s:${WORKDIR}:${BAZEL_OUTPUTBASE_DIR}/external/yocto_compiler:g" ${S}/bazelrc
+    sed -i "s:${WORKDIR}:${BAZEL_OUTPUTBASE_DIR}/external/yocto_compiler:g" ${S}/.configure.bazelrc
 }
 
 EXPORT_FUNCTIONS do_configure
@@ -144,7 +139,7 @@ do_clean[prefuncs] += "clean_bazel"
 clean_bazel() {
     if [ -d ${S} ]; then
         cd ${S}
-        if [ -e ${BAZEL} ] && [ -e ${S}/bazelrc ]; then
+        if [ -e ${BAZEL} ] && [ -e ${S}/.configure.bazelrc ]; then
             ${BAZEL} clean
         fi
     fi

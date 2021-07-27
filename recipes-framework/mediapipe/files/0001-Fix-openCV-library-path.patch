@@ -1,0 +1,87 @@
+From aa21567b7ad1dd2eb7d84fd318c3f62448311521 Mon Sep 17 00:00:00 2001
+From: "w.stott" <w.stott@engineeredarts.co.uk>
+Date: Mon, 26 Jul 2021 15:13:30 +0100
+Subject: [PATCH] Fix openCV library path
+
+Use yocto opencv and ffmpeg
+---
+ WORKSPACE                      |  6 +++---
+ third_party/opencv_linux.BUILD | 32 ++++++++++++++------------------
+ 2 files changed, 17 insertions(+), 21 deletions(-)
+
+diff --git a/WORKSPACE b/WORKSPACE
+index fb38c13..c383db8 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -214,13 +214,13 @@ http_archive(
+ new_local_repository(
+     name = "linux_opencv",
+     build_file = "@//third_party:opencv_linux.BUILD",
+-    path = "/usr",
++    path = "%%WORKDIR%%/recipe-sysroot/usr/",
+ )
+ 
+ new_local_repository(
+     name = "linux_ffmpeg",
+     build_file = "@//third_party:ffmpeg_linux.BUILD",
+-    path = "/usr"
++    path = "%%WORKDIR%%/recipe-sysroot/usr/",
+ )
+ 
+ new_local_repository(
+diff --git a/third_party/opencv_linux.BUILD b/third_party/opencv_linux.BUILD
+index 26978d5..ed04670 100644
+--- a/third_party/opencv_linux.BUILD
++++ b/third_party/opencv_linux.BUILD
+@@ -5,37 +5,33 @@ licenses(["notice"])  # BSD license
+ 
+ exports_files(["LICENSE"])
+ 
+-# The following build rule assumes that OpenCV is installed by
+-# 'apt-get install libopencv-core-dev libopencv-highgui-dev \'
+-# '                libopencv-calib3d-dev libopencv-features2d-dev \'
+-# '                libopencv-imgproc-dev libopencv-video-dev'
+-# on Debian buster/Ubuntu 18.04.
+-# If you install OpenCV separately, please modify the build rule accordingly.
++# The following build rule assumes that OpenCV is installed by yocto and there is a
++# new_local_repository which points to %%WORKDIR%% in the WORKSPACE
+ cc_library(
+     name = "opencv",
+     srcs = glob(
+         [
+-            "lib/x86_64-linux-gnu/libopencv_core.so",
+-            "lib/x86_64-linux-gnu/libopencv_calib3d.so",
+-            "lib/x86_64-linux-gnu/libopencv_features2d.so",
+-            "lib/x86_64-linux-gnu/libopencv_highgui.so",
+-            "lib/x86_64-linux-gnu/libopencv_imgcodecs.so",
+-            "lib/x86_64-linux-gnu/libopencv_imgproc.so",
+-            "lib/x86_64-linux-gnu/libopencv_video.so",
+-            "lib/x86_64-linux-gnu/libopencv_videoio.so",
++            "lib/libopencv_core.so",
++            "lib/libopencv_calib3d.so",
++            "lib/libopencv_features2d.so",
++            "lib/libopencv_highgui.so",
++            "lib/libopencv_imgcodecs.so",
++            "lib/libopencv_imgproc.so",
++            "lib/libopencv_video.so",
++            "lib/libopencv_videoio.so",
+         ],
+     ),
+     hdrs = glob([
+         # For OpenCV 3.x
+-        "include/opencv2/**/*.h*",
++        # "include/opencv2/**/*.h*",
+         # For OpenCV 4.x
+-        # "include/opencv4/opencv2/**/*.h*",
++        "include/opencv4/opencv2/**/*.h*",
+     ]),
+     includes = [
+         # For OpenCV 3.x
+-        "include/",
++        # "include/",
+         # For OpenCV 4.x
+-        # "include/opencv4/",
++        "include/opencv4/",
+     ],
+     linkstatic = 1,
+     visibility = ["//visibility:public"],

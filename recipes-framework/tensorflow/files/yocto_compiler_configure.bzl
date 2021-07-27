@@ -16,10 +16,7 @@ def _yocto_compiler_configure_impl(repository_ctx):
     # it may not be reflected in later builds. Doing a shutdown and clean of Bazel
     # doesn't fix this, you'll need to delete the generated file at something like:
     # external/local_config_arm_compiler/CROSSTOOL in your Bazel install.
-    if "CROSSTOOL_PYTHON_INCLUDE_PATH" in repository_ctx.os.environ:
-        python_include_path = repository_ctx.os.environ["CROSSTOOL_PYTHON_INCLUDE_PATH"]
-    else:
-        python_include_path = "/buildarea/raid5/hjia/wrlinux-20/build_master-wr_ts_intel_2020120722/build/tmp-glibc/work/corei7-64-wrs-linux/tensorflow/2.4.0-r0/recipe-sysroot/usr/include/python3.9"
+    python_include_path = repository_ctx.os.environ["CROSSTOOL_PYTHON_INCLUDE_PATH"]
 
     if "CT_NAME" in repository_ctx.os.environ:
         cross_tool_name = repository_ctx.os.environ["CT_NAME"]
