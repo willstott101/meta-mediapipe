@@ -38,6 +38,10 @@ SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://yocto_compiler_configure.bzl \
            file://0001-Yocto-patches.patch \
            file://0001-Fix-openCV-library-path.patch \
+           file://mediapipe-config-version.cmake \
+           file://mediapipe-config.cmake \
+           file://mediapipe-targets-release.cmake \
+           file://mediapipe-targets.cmake \
            "
 
 S = "${WORKDIR}/git"
@@ -84,12 +88,13 @@ ENDOF
                             ${S}/WORKSPACE
 }
 
-MP_TARGET_EXTRA ??= ""
+# MP_TARGET ??= "mediapipe/examples/desktop/face_detection:face_detection_gpu"
+MP_TARGET ??= "mediapipe/examples/desktop/libmediapipe:libmediapipe_gpu.so"
 do_compile () {
     export CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
     unset CC
     # DEGL_NO_X11 is due to x11 headers being gammy - it doesn't actually prevent
-    # EGL from using X11, via "default display" type stuff.
+    # EGL from using X11, via "default display" apis.
     ${BAZEL} build \
         ${MP_ARGS_EXTRA} \
         -c opt \
@@ -100,22 +105,66 @@ do_compile () {
         --host_crosstool_top=@bazel_tools//tools/cpp:toolchain \
         --verbose_explanations --verbose_failures \
         --verbose_failures \
-        mediapipe/examples/desktop/face_detection:face_detection_gpu \
-        ${MP_TARGET_EXTRA}
+        ${MP_TARGET}
 }
 
 do_install() {
+    # There are loads of .so files we don't want... so we have to filter by directory
+    install -d ${D}${libdir}
+    install -m 755 ${S}/bazel-bin/mediapipe/examples/desktop/libmediapipe/libmediapipe_gpu.so \
+        ${D}${libdir}/libmediapipe_gpu.so.${PV}
+    # TODO: Don't hardcode .0 here and match it to the cmake ref too
+    ln -s -r ${D}${libdir}/libmediapipe_gpu.so.${PV} ${D}${libdir}/libmediapipe_gpu.so.0
+
     install -d ${D}${bindir}
-    install -m 755 ${S}/bazel-bin/mediapipe/examples/desktop/face_detection/face_detection_gpu \
-        ${D}${bindir}
-    # runtime data
-    install -d ${D}/opt/mediapipe/
-    cp -r ${S}/mediapipe/graphs/ ${D}/opt/mediapipe/
-    chmod 644 -R ${D}/opt/mediapipe/graphs
-    find ${D}/opt/mediapipe/graphs -type d -exec chmod 0755 {} +
+    # There are loads of executable files we don't want... so take any with no '.'' in the path...
+    find ${S}/bazel-bin/mediapipe/ -type f -executable ! -path '*.*' -exec install -D -m 755 {} ${D}/${bindir} \;
+
+    # QDH: Just include ALL graph definitions
+    for f in $( find ${S}/mediapipe/graphs/ -name '*.pbtxt' -printf "%P\n" );
+    do
+        install -D -m 644 ${S}/mediapipe/graphs/${f} ${D}/opt/mediapipe/graphs/${f}
+    done
+
+    # QDH: Just include ALL headers from the source - there seems no built-in way to get only
+    # the relevant headers out from bazel.
+    for f in $( find ${BAZEL_OUTPUTBASE_DIR}/external/com_google_absl/ -regex ".*\.\(inc\|h\)\$" -printf "%P\n" );
+    do
+        # Save third-party headers to mediapipe-external to avoid any potential clashes.
+        install -D -m 644 ${BAZEL_OUTPUTBASE_DIR}/external/com_google_absl/${f} \
+            ${D}${includedir}/mediapipe-external/${f}
+    done
+
+    for f in $( find ${BAZEL_OUTPUTBASE_DIR}/external/com_google_protobuf/src/ -regex ".*\.\(inc\|h\)\$" -printf "%P\n" );
+    do
+        # Save third-party headers to mediapipe-external to avoid any potential clashes.
+        install -D -m 644 ${BAZEL_OUTPUTBASE_DIR}/external/com_google_protobuf/src/${f} \
+            ${D}${includedir}/mediapipe-external/${f}
+    done
+
+    for f in $( find ${BAZEL_OUTPUTBASE_DIR}/execroot/mediapipe/bazel-out/host/bin/mediapipe/ -name '*.pb.h' -printf "%P\n" );
+    do
+        install -D -m 644 ${BAZEL_OUTPUTBASE_DIR}/execroot/mediapipe/bazel-out/host/bin/mediapipe/${f} \
+            ${D}${includedir}/mediapipe/${f}
+    done
+    for f in $( find ${S}/mediapipe -name '*.h' -printf "%P\n" );
+    do
+        install -D -m 644 ${S}/mediapipe/${f} ${D}${includedir}/mediapipe/${f}
+    done
+
+    CMAKE_DEST=${D}${libdir}/cmake/mediapipe
+    install -d ${CMAKE_DEST}
+    sed "s#%%PV%%#${PV}#g" ${WORKDIR}/mediapipe-config-version.cmake > ${CMAKE_DEST}/mediapipe-config-version.cmake
+    install -m 644 ${WORKDIR}/mediapipe-config.cmake ${CMAKE_DEST}
+    sed "s#%%PV%%#${PV}#g" ${WORKDIR}/mediapipe-targets-release.cmake > ${CMAKE_DEST}/mediapipe-targets-release.cmake
+    install -m 644 ${WORKDIR}/mediapipe-targets.cmake ${CMAKE_DEST}
+    chmod 644 ${CMAKE_DEST}/*
+
+    find ${D} -type d -empty -delete
 }
 
-FILES_${PN} = "/opt/mediapipe/* ${bindir}/*"
+FILES_${PN} = "/opt/mediapipe/* ${bindir}/* ${libdir}/*"
+INSANE_SKIP_${PN}-dev += " dev-elf "
 
 # do_compile_append() {
 #     chmod a+w ${BAZEL_DIR}/output_base/execroot/org_tensorflow/bazel-out/*/bin/tensorflow/lite/python/schema_py_srcs_no_include_all
