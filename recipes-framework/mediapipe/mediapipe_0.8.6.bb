@@ -126,6 +126,13 @@ do_install() {
         install -D -m 644 ${S}/mediapipe/graphs/${f} ${D}/opt/mediapipe/graphs/${f}
     done
 
+    # QDH: Just include ALL module definitions
+    for f in $( find ${S}/mediapipe/modules/ -name '*.tflite' -printf "%P\n" );
+    do
+        install -D -m 644 ${S}/mediapipe/modules/${f} ${D}/opt/mediapipe/modules/${f}
+    done
+
+
     # QDH: Just include ALL headers from the source - there seems no built-in way to get only
     # the relevant headers out from bazel.
     for f in $( find ${BAZEL_OUTPUTBASE_DIR}/external/com_google_absl/ -regex ".*\.\(inc\|h\)\$" -printf "%P\n" );
