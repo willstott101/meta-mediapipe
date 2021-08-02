@@ -1,0 +1,70 @@
+From e9cc946459068c3fcf11f5e2e0135619afaaa76d Mon Sep 17 00:00:00 2001
+From: "w.stott" <w.stott@engineeredarts.co.uk>
+Date: Fri, 30 Jul 2021 13:09:02 +0100
+Subject: [PATCH] Build library
+
+---
+ mediapipe/examples/desktop/libmediapipe/BUILD | 40 +++++++++++++++++++
+ mediapipe/framework/BUILD                     |  1 +
+ 2 files changed, 41 insertions(+)
+ create mode 100644 mediapipe/examples/desktop/libmediapipe/BUILD
+
+diff --git a/mediapipe/examples/desktop/libmediapipe/BUILD b/mediapipe/examples/desktop/libmediapipe/BUILD
+new file mode 100644
+index 0000000..e3ba725
+--- /dev/null
++++ b/mediapipe/examples/desktop/libmediapipe/BUILD
+@@ -0,0 +1,40 @@
++# Copyright 2021 The MediaPipe Authors.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++licenses(["notice"])
++
++package(default_visibility = ["//mediapipe/examples:__subpackages__"])
++
++cc_binary(
++    name = "libmediapipe_gpu.so",
++    deps = [
++        # Basic dependencies for image inference
++        "//mediapipe/framework:calculator_framework",
++        "//mediapipe/framework/formats:image_frame",
++        "//mediapipe/framework/port:parse_text_proto",
++        "//mediapipe/framework/port:status",
++        # GPU Helpers
++        "//mediapipe/gpu:gl_calculator_helper",
++        "//mediapipe/gpu:gpu_buffer",
++        "//mediapipe/gpu:gpu_shared_data_internal",
++        "//mediapipe/calculators/image:set_alpha_calculator",
++        # Stuff used by the models we want
++        "//mediapipe/graphs/face_detection:desktop_live_gpu_calculators",
++        "//mediapipe/graphs/face_mesh:desktop_live_gpu_calculators",
++        "//mediapipe/graphs/hand_tracking:mobile_calculators",
++        "//mediapipe/graphs/pose_tracking:pose_tracking_gpu_deps",
++    ],
++    linkopts = ["-Wl,-soname,libmediapipe_gpu.so.0"],
++    linkshared = 1, ## important
++)
+\ No newline at end of file
+diff --git a/mediapipe/framework/BUILD b/mediapipe/framework/BUILD
+index c25e9d8..6e5d8f9 100644
+--- a/mediapipe/framework/BUILD
++++ b/mediapipe/framework/BUILD
+@@ -288,6 +288,7 @@ cc_library(
+     visibility = [
+         ":mediapipe_internal",
+     ],
++    alwayslink=1,
+     deps = [
+         ":calculator_base",
+         ":calculator_node",

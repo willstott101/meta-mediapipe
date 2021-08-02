@@ -42,6 +42,7 @@ SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://mediapipe-config.cmake \
            file://mediapipe-targets-release.cmake \
            file://mediapipe-targets.cmake \
+           file://0002-Build-library.patch \
            "
 
 S = "${WORKDIR}/git"
