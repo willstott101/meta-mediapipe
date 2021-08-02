@@ -1,9 +1,11 @@
 # meta-mediapipe
 
 ## Introduction
-This is a hackey copy-paste-smash-together of the meta-tensorflow layer at https://github.com/Wind-River/meta-tensorflow
+This is a hackey copy-paste-smash-together of the meta-tensorflow layer at http://git.yoctoproject.org/cgit/cgit.cgi/meta-tensorflow
 to _instead_ support building Mediapipe. Tensorflow(-lite at least) is a dependency of Mediapipe but I have made no
 effort to re-use the tensorflow built by yocto in the mediapipe build.
+
+The `tensorflow` recipes probably don't even work right now in this layer.
 
 ## TODO
 * Test and implement building the mediapipe python library
