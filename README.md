@@ -1,84 +1,84 @@
-# meta-tensorflow
+# meta-mediapipe
+
+## Introduction
+This is a hackey copy-paste-smash-together of the meta-tensorflow layer at https://github.com/Wind-River/meta-tensorflow
+to _instead_ support building Mediapipe. Tensorflow(-lite at least) is a dependency of Mediapipe but I have made no
+effort to re-use the tensorflow built by yocto in the mediapipe build.
+
+## TODO
+* Test and implement building the mediapipe python library
+* Achieve compatiblity with the meta-tensorflow layer
+** Test and fix the existing tensorflow build along-side the mediapipe build.
+** Re-use the tensorflow parts built by yocto in the mediapipe build
+** Merge meta-tensorflow and meta-mediapipe
+* Use bazel to accumulate more of the library
+** Use Bazel to gather only the needed header files
+** Use Bazel to gather only the needed tflite files
+* Support a more configurable build for the c++ library
+** Use bitbake features to enable/disable certain calculators and modules
 
 ## Overview
+Mediapipe is a Media-processing (mainly for ML inference) pipelineing library.
+
+Enabling easy use of hardware acceleration, protobufs, and tflite for feature/object detection and pose inference.
+
+See: https://github.com/google/mediapipe https://github.com/tensorflow
+
+This repository is build configuration for cross-compiling mediapipe using the Open-Embedded/Yocto ecosystem.
+
+See: https://www.yoctoproject.org/ https://github.com/siemens/kas
+
+## Usage
+I'm not going to go into great detail here but the kas config I used to build a mediapipe c++ library for RPi 4 was:
+
+```yaml
+header:
+  version: 10
+
+machine: raspberrypi4-64
+
+distro: our-own-poky-based-distro
+
+repos:
+  poky:
+    url: https://git.yoctoproject.org/git/poky
+    # refspec: master
+    refspec: df2a1f37f77d19e62a5fbdb462a9b24e104f0448
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+  raspberrypi:
+    url: git://git.yoctoproject.org/meta-raspberrypi
+    # refspec: master
+    refspec: 0e48785e15d864438cade6e526056dbc92e7a690
+  private-system-layer:
+    # our own layer with OS configuration and networking bits
+  private-app-layer:
+    # our own software which made use of the c++ library
+  oe:
+    url: https://github.com/openembedded/meta-openembedded
+    # refspec: master
+    refspec: e418ee4657e084c8b4d42aabf76ff6df99253e91
+    layers:
+      meta-oe:
+      meta-python:
+      meta-multimedia:
+      meta-networking:
+  tensorflow:
+    url: THIS REPOSITORY
+    refspec: master
+
+local_conf_header:
+  meta-custom: |
+    PACKAGE_CLASSES ?= "package_deb"
+    PREFERRED_VERSION_protobuf = "3.12.3"
+    PREFERRED_VERSION_protobuf-native = "3.12.3"
+    LICENSE_FLAGS_WHITELIST += "commercial"
+    ENABLE_DWC2_HOST = "1"
+    PRSERV_HOST = "localhost:0"
+    BB_NUMBER_THREADS = "4"
+
+target:
+  # Our own system image targets from `private-system-layer`
 ```
-TensorFlow is an open source software library for high performance numerical
-computation primarily used in machine learning. Its flexible architecture
-allows easy deployment of computation across a variety of types of platforms
-(CPUs, GPUs, TPUs), and a range of systems from single desktops to clusters
-of servers to mobile and edge devices.
-(https://www.tensorflow.org/)
-
-The build system of TensorFlow is Bazel (https://bazel.build/).
-
-This layer integrates TensorFlow to OE/Yocto platform
-- Integrate Google's bazel to Yocto
-- Add Yocto toolchain for bazel to support cross compiling.
-- Replace python package system(pip/wheel) with Yocto package system(rpm/deb/ipk).
-```
-
-## Prerequisite(s)
-### 1. Based on Yocto
-Yocto layer dependencies
-```
-URI: git://github.com/openembedded/openembedded-core.git
-branch: master
-revision: HEAD
-
-URI: git://github.com/openembedded/bitbake.git
-branch: master
-revision: HEAD
-
-URI: git://github.com/openembedded/meta-openembedded.git
-layers: meta-python, meta-oe
-branch: master
-revision: HEAD
-```
-### 2. Based on Wind River Linux
-Wind River Linux (CI/CD branch)
-
-## Installation
-[Build and Run](https://github.com/Wind-River/meta-tensorflow/blob/master/BUILD.md)
-
-## Demo 1. Facial recognition
-### 1.1 Based on Yocto
-[Face recognition on Yocto](https://github.com/Wind-River/meta-tensorflow/blob/master/meta-demo/README.md)
-
-### 1.2 Based on Wind River Linux
-[Face recognition on Wind River Linux](https://github.com/Wind-River/meta-tensorflow/blob/master/meta-demo/README-wrl.md)
->![picture](https://github.com/Wind-River/meta-tensorflow/blob/master/meta-demo/files/tensorflow-demo.gif)
-
-## Demo 2. [Neural Machine Translation](https://github.com/Wind-River/meta-tensorflow/blob/master/meta-demo/recipes-demo/nmt/README-nmt.md)
-
-## Demo 3. [Minigo: A minimalist Go engine modeled after AlphaGo Zero](https://github.com/Wind-River/meta-tensorflow/blob/master/meta-demo/recipes-demo/minigo/README.md)
-
-## Project License
-```
-Copyright (C) 2019 Wind River Systems, Inc.
-
-All metadata is MIT licensed unless otherwise stated. Source code included
-in tree for individual recipes is under the LICENSE stated in each recipe
-(.bb file) unless otherwise stated.
-```
-
-## Legal Notices
-```
-If product is based on Wind River Linux:
-
-All product names, logos, and brands are property of their respective owners.
-All company, product and service names used in this software are for identification
-purposes only. Wind River are registered trademarks of Wind River Systems.
-
-Disclaimer of Warranty / No Support: Wind River does not provide support and
-maintenance services for this software, under Wind River’s standard Software
-Support and Maintenance Agreement or otherwise. Unless required by applicable
-law, Wind River provides the software (and each contributor provides its
-contribution) on an “AS IS” BASIS, WITHOUT WARRANTIES OF ANY KIND, either express
-or implied, including, without limitation, any warranties of TITLE, NONINFRINGEMENT,
-MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible
-for determining the appropriateness of using or redistributing the software
-and assume ay risks associated with your exercise of permissions under the license.
-```
-
-## Attribution
-TensorFlow, the TensorFlow logo and any related marks are trademarks of Google Inc.
