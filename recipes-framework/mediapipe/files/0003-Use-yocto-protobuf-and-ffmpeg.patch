@@ -1,0 +1,55 @@
+From 8c834803b08196a79cbedaefb0a9a1c18b27c02d Mon Sep 17 00:00:00 2001
+From: "w.stott" <w.stott@engineeredarts.co.uk>
+Date: Thu, 19 Aug 2021 12:43:40 +0100
+Subject: [PATCH] Use yocto protobuf and ffmpeg
+
+---
+ WORKSPACE                                  |   19 +-
+ third_party/com_google_protobuf_fixes.diff |  182 +--
+ third_party/ffmpeg_linux.BUILD             |    4 +-
+ third_party/protobuf_yocto.BUILD           | 1362 ++++++++++++++++++++
+ 4 files changed, 1418 insertions(+), 149 deletions(-)
+ create mode 100644 third_party/protobuf_yocto.BUILD
+
+diff --git a/WORKSPACE b/WORKSPACE
+index c383db8..b63bd62 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -158,11 +158,16 @@ http_archive(
+     sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
+     strip_prefix = "protobuf-3.11.4",
+     urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz"],
+-    patches = [
+-        "@//third_party:com_google_protobuf_fixes.diff"
++    build_file = "@//:protobuf_yocto.BUILD",
++    patch_cmds = [
++        "mkdir -p yocto/include/google yocto/native",
++        "cp %%WORKDIR%%/recipe-sysroot/usr/lib/libprotobuf*.so yocto/",
++        "cp -r %%WORKDIR%%/recipe-sysroot/usr/include/google ./yocto/include/google",
++        "cp %%WORKDIR%%/recipe-sysroot-native/usr/bin/protoc ./yocto/native/protoc-native",
++        "cp %%WORKDIR%%/recipe-sysroot-native/usr/lib/libproto* ./yocto/native/",
+     ],
+-    patch_args = [
+-        "-p1",
++    patches = [
++        "@//:com_google_protobuf_use_protoc_on_path.diffforbazeltoapply",
+     ],
+ )
+ 
+diff --git a/third_party/ffmpeg_linux.BUILD b/third_party/ffmpeg_linux.BUILD
+index a2d588b..2a7b445 100644
+--- a/third_party/ffmpeg_linux.BUILD
++++ b/third_party/ffmpeg_linux.BUILD
+@@ -20,10 +20,10 @@ cc_library(
+     name = "libffmpeg",
+     srcs = glob(
+         [
+-            "lib/x86_64-linux-gnu/libav*.so",
++            "lib/libav*.so",
+         ],
+     ),
+-    hdrs = glob(["include/x86_64-linux-gnu/libav*/*.h"]),
++    hdrs = glob(["include/libav*/*.h"]),
+     includes = ["include"],
+     linkopts = [
+         "-lavcodec",

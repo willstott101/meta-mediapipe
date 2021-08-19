@@ -1,0 +1,42 @@
+diff --git protobuf.bzl protobuf.bzl
+index 829464d44..cd356b726 100644
+--- protobuf.bzl
++++ protobuf.bzl
+@@ -119,7 +119,7 @@ def _proto_gen_impl(ctx):
+ 
+         outs = [ctx.actions.declare_file(out, sibling = src) for out in outs]
+         inputs = [src] + deps
+-        tools = [ctx.executable.protoc]
++        tools = []
+         if ctx.executable.plugin:
+             plugin = ctx.executable.plugin
+             lang = ctx.attr.plugin_language
+@@ -142,7 +142,7 @@ def _proto_gen_impl(ctx):
+                 tools = tools,
+                 outputs = outs,
+                 arguments = args + import_flags + [src.path],
+-                executable = ctx.executable.protoc,
++                executable = "protoc",
+                 mnemonic = "ProtoCompile",
+                 use_default_shell_env = True,
+             )
+@@ -183,12 +183,13 @@ proto_gen = rule(
+         "srcs": attr.label_list(allow_files = True),
+         "deps": attr.label_list(providers = ["proto"]),
+         "includes": attr.string_list(),
+-        "protoc": attr.label(
+-            cfg = "host",
+-            executable = True,
+-            allow_single_file = True,
+-            mandatory = True,
+-        ),
++        "protoc": attr.string(),
++        # "protoc": attr.label(
++        #     cfg = "host",
++        #     executable = True,
++        #     allow_single_file = True,
++        #     mandatory = True,
++        # ),
+         "plugin": attr.label(
+             cfg = "host",
+             allow_files = True,

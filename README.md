@@ -7,6 +7,20 @@ effort to re-use the tensorflow built by yocto in the mediapipe build.
 
 The `tensorflow` recipes probably don't even work right now in this layer.
 
+## Linked external OpenEmbedded Libraries
+For an exhaustive list check out the dependencies listed in the mediapipe bb file.
+
+* protobuf(-native)
+ * Google projects tend to statically compile protobuf into themselves
+ * Protobuf statically compiled in exposes all the protobuf symbols
+ * Using another library which links to or includes protobuf is then impossible
+ * So we've modified mediapipe to use and link to an externally built protobuf
+ * We still let bazel download the version of protobuf it wants to use the bazel scripts
+ * However we modify the bazel files in that protobuf download to use yocto-built protobuf
+* mesa - required for GPU inference/processing support
+* opencv - not really neccessary for most usage of mediapipe
+* ffmpeg - largely untested
+
 ## TODO
 * Test and implement building the mediapipe python library
 * Achieve compatiblity with the meta-tensorflow layer
@@ -74,8 +88,6 @@ repos:
 local_conf_header:
   meta-custom: |
     PACKAGE_CLASSES ?= "package_deb"
-    PREFERRED_VERSION_protobuf = "3.12.3"
-    PREFERRED_VERSION_protobuf-native = "3.12.3"
     LICENSE_FLAGS_WHITELIST += "commercial"
     ENABLE_DWC2_HOST = "1"
     PRSERV_HOST = "localhost:0"

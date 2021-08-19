@@ -43,6 +43,9 @@ SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://mediapipe-targets-release.cmake \
            file://mediapipe-targets.cmake \
            file://0002-Build-library.patch \
+           file://0003-Use-yocto-protobuf-and-ffmpeg.patch \
+           file://protobuf_yocto.BUILD \
+           file://com_google_protobuf_use_protoc_on_path.diffforbazeltoapply \
            "
 
 S = "${WORKDIR}/git"
@@ -79,6 +82,8 @@ ENDOF
     install -m 644 ${WORKDIR}/cc_config.bzl.tpl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/yocto_compiler_configure.bzl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/BUILD.yocto_compiler ${S}
+    install -m 644 ${WORKDIR}/protobuf_yocto.BUILD ${S}
+    install -m 644 ${WORKDIR}/com_google_protobuf_use_protoc_on_path.diffforbazeltoapply ${S}
 
     CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
     SED_COMMAND="s#%%CT_NAME%%#${CT_NAME}#g"
@@ -94,6 +99,10 @@ MP_TARGET ??= "mediapipe/examples/desktop/libmediapipe:libmediapipe_gpu.so"
 do_compile () {
     export CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
     unset CC
+
+    protoc --version
+    which protoc
+
     # DEGL_NO_X11 is due to x11 headers being gammy - it doesn't actually prevent
     # EGL from using X11, via "default display" apis.
     ${BAZEL} build \
@@ -104,7 +113,7 @@ do_compile () {
         --cpu=${BAZEL_TARGET_CPU} \
         --crosstool_top=@local_config_yocto_compiler//:toolchain \
         --host_crosstool_top=@bazel_tools//tools/cpp:toolchain \
-        --verbose_explanations --verbose_failures \
+        --verbose_explanations \
         --verbose_failures \
         ${MP_TARGET}
 }
@@ -140,13 +149,6 @@ do_install() {
     do
         # Save third-party headers to mediapipe-external to avoid any potential clashes.
         install -D -m 644 ${BAZEL_OUTPUTBASE_DIR}/external/com_google_absl/${f} \
-            ${D}${includedir}/mediapipe-external/${f}
-    done
-
-    for f in $( find ${BAZEL_OUTPUTBASE_DIR}/external/com_google_protobuf/src/ -regex ".*\.\(inc\|h\)\$" -printf "%P\n" );
-    do
-        # Save third-party headers to mediapipe-external to avoid any potential clashes.
-        install -D -m 644 ${BAZEL_OUTPUTBASE_DIR}/external/com_google_protobuf/src/${f} \
             ${D}${includedir}/mediapipe-external/${f}
     done
 
