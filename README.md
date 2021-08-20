@@ -15,8 +15,8 @@ For an exhaustive list check out the dependencies listed in the mediapipe bb fil
  * Protobuf statically compiled in exposes all the protobuf symbols
  * Using another library which links to or includes protobuf is then impossible
  * So we've modified mediapipe to use and link to an externally built protobuf
- * We still let bazel download the version of protobuf it wants to use the bazel scripts
- * However we modify the bazel files in that protobuf download to use yocto-built protobuf
+ * We still let bazel download the version of protobuf it wants, to let it  use the bazel scripts
+ * However we modify the bazel files in that protobuf download to expose the yocto-built protobuf
 * mesa - required for GPU inference/processing support
 * opencv - not really neccessary for most usage of mediapipe
 * ffmpeg - largely untested

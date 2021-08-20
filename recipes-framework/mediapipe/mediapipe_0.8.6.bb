@@ -82,7 +82,10 @@ ENDOF
     install -m 644 ${WORKDIR}/cc_config.bzl.tpl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/yocto_compiler_configure.bzl ${S}/third_party/toolchains/yocto/
     install -m 644 ${WORKDIR}/BUILD.yocto_compiler ${S}
+
+    # We let bazel download protobuf - but we replace it's build file to use our local dynamic libs and headers.
     install -m 644 ${WORKDIR}/protobuf_yocto.BUILD ${S}
+    # We patch it's bazel scripts to just use the "protoc" on path rather then get the path from bazel.
     install -m 644 ${WORKDIR}/com_google_protobuf_use_protoc_on_path.diffforbazeltoapply ${S}
 
     CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
