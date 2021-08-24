@@ -16,6 +16,8 @@ DEPENDS = " \
     python3-keras-preprocessing-native \
     python3-pip-native \
     python3-wheel-native \
+    xxd-native \
+    libusb1 \
 "
 # Copied from opencv_linux.BUILD
 RDEPENDS_${PN} = " \
@@ -46,6 +48,7 @@ SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://0003-Use-yocto-protobuf.patch \
            file://protobuf_yocto.BUILD \
            file://com_google_protobuf_use_protoc_on_path.diffforbazeltoapply \
+           file://0001-instruct-bazel-to-patch-libedgetpu.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -112,6 +115,11 @@ do_compile () {
         ${MP_ARGS_EXTRA} \
         -c opt \
         --copt -DEGL_NO_X11 \
+        --define darwinn_portable=1 \
+        --define MEDIAPIPE_EDGE_TPU=usb \
+        --linkopt=-l:libusb-1.0.so \
+        --copt -DMEDIAPIPE_EDGE_TPU \
+        --copt=-flax-vector-conversions \
         --subcommands --explain=${T}/explain.log \
         --cpu=${BAZEL_TARGET_CPU} \
         --crosstool_top=@local_config_yocto_compiler//:toolchain \

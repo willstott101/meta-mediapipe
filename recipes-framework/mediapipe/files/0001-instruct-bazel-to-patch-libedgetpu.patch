@@ -1,0 +1,24 @@
+From a1216dc877470a82652c3afba86e5f942caf9084 Mon Sep 17 00:00:00 2001
+From: Kas User <kas@example.com>
+Date: Fri, 20 Aug 2021 15:36:46 +0100
+Subject: [PATCH] instruct bazel to patch libedgegpu
+
+---
+ WORKSPACE | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/WORKSPACE b/WORKSPACE
+index 590216f..c1f3faf 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -434,6 +434,10 @@ http_archive(
+   urls = [
+     "https://github.com/google-coral/libedgetpu/archive/3164995622300286ef2bb14d7fdc2792dae045b7.tar.gz"
+   ],
++  patch_cmds = [
++      "sed -i 's|        path = \"/usr/include\"|        path = \"%%WORKDIR%%/include\"|'  %%WORKDIR%%/bazel/output_base/external/libedgetpu/workspace.bzl",
++      "mkdir -p %%WORKDIR%%/include && cp -r %%WORKDIR%%/recipe-sysroot/usr/include/libusb-1.0/ %%WORKDIR%%/include"
++  ],
+ )
+ load("@libedgetpu//:workspace.bzl", "libedgetpu_dependencies")
+ libedgetpu_dependencies()
