@@ -139,10 +139,10 @@ do_install() {
         install -D -m 644 ${S}/mediapipe/graphs/${f} ${D}/opt/mediapipe/graphs/${f}
     done
 
-    # QDH: Just include ALL module definitions
-    for f in $( find ${S}/mediapipe/modules/ -name '*.tflite' -printf "%P\n" );
+    # QDH: Just include ALL tflite models
+    for f in $( find ${S}/mediapipe/ -name '*.tflite' -printf "%P\n" );
     do
-        install -D -m 644 ${S}/mediapipe/modules/${f} ${D}/opt/mediapipe/modules/${f}
+        install -D -m 644 ${S}/mediapipe/${f} ${D}/opt/mediapipe/${f}
     done
 
 
