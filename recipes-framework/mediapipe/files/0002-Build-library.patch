@@ -34,7 +34,7 @@ index 0000000..e3ba725
 +package(default_visibility = ["//mediapipe/examples:__subpackages__"])
 +
 +cc_binary(
-+    name = "libmediapipe_gpu.so",
++    name = "libmediapipe.so",
 +    deps = [
 +        # Basic dependencies for image inference
 +        "//mediapipe/framework:calculator_framework",
@@ -52,7 +52,7 @@ index 0000000..e3ba725
 +        "//mediapipe/graphs/hand_tracking:mobile_calculators",
 +        "//mediapipe/graphs/pose_tracking:pose_tracking_gpu_deps",
 +    ],
-+    linkopts = ["-Wl,-soname,libmediapipe_gpu.so.0"],
++    linkopts = ["-Wl,-soname,libmediapipe.so.0"],
 +    linkshared = 1, ## important
 +)
 \ No newline at end of file

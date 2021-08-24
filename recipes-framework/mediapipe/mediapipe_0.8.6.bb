@@ -98,7 +98,7 @@ ENDOF
 }
 
 # MP_TARGET ??= "mediapipe/examples/desktop/face_detection:face_detection_gpu"
-MP_TARGET ??= "mediapipe/examples/desktop/libmediapipe:libmediapipe_gpu.so"
+MP_TARGET ??= "mediapipe/examples/desktop/libmediapipe:libmediapipe.so"
 do_compile () {
     export CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
     unset CC
@@ -124,10 +124,10 @@ do_compile () {
 do_install() {
     # There are loads of .so files we don't want... so we have to filter by directory
     install -d ${D}${libdir}
-    install -m 755 ${S}/bazel-bin/mediapipe/examples/desktop/libmediapipe/libmediapipe_gpu.so \
-        ${D}${libdir}/libmediapipe_gpu.so.${PV}
+    install -m 755 ${S}/bazel-bin/mediapipe/examples/desktop/libmediapipe/libmediapipe.so \
+        ${D}${libdir}/libmediapipe.so.${PV}
     # TODO: Don't hardcode .0 here and match it to the cmake ref too
-    ln -s -r ${D}${libdir}/libmediapipe_gpu.so.${PV} ${D}${libdir}/libmediapipe_gpu.so.0
+    ln -s -r ${D}${libdir}/libmediapipe.so.${PV} ${D}${libdir}/libmediapipe.so.0
 
     install -d ${D}${bindir}
     # There are loads of executable files we don't want... so take any with no '.'' in the path...
@@ -165,6 +165,8 @@ do_install() {
         install -D -m 644 ${S}/mediapipe/${f} ${D}${includedir}/mediapipe/${f}
     done
 
+    # We've copy-pasted these cmake-generated files and modified them - since we're not actually using cmake to build..
+    # It'd probably be neater to use cmake to generate these files from our .so
     CMAKE_DEST=${D}${libdir}/cmake/mediapipe
     install -d ${CMAKE_DEST}
     sed "s#%%PV%%#${PV}#g" ${WORKDIR}/mediapipe-config-version.cmake > ${CMAKE_DEST}/mediapipe-config-version.cmake
