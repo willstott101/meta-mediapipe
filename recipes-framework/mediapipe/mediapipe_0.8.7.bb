@@ -30,20 +30,20 @@ RDEPENDS_${PN} = " \
 "
 
 
-SRCREV = "374f5e2e7e818bde5289fb3cffa616705cec6f73"
+SRCREV = "710fb3de58dc10b7bc75f9cb758300c9016a5e4f"
 SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://BUILD.in \
            file://BUILD.yocto_compiler \
            file://cc_config.bzl.tpl \
            file://yocto_compiler_configure.bzl \
            file://0001-Yocto-patches.patch \
-           file://0001-Fix-openCV-library-path.patch \
+           file://0001-Fix-opencv-ffmpeg-library-paths.patch \
            file://mediapipe-config-version.cmake \
            file://mediapipe-config.cmake \
            file://mediapipe-targets-release.cmake \
            file://mediapipe-targets.cmake \
            file://0002-Build-library.patch \
-           file://0003-Use-yocto-protobuf-and-ffmpeg.patch \
+           file://0003-Use-yocto-protobuf.patch \
            file://protobuf_yocto.BUILD \
            file://com_google_protobuf_use_protoc_on_path.diffforbazeltoapply \
            "
