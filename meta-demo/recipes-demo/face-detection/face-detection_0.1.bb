@@ -7,7 +7,7 @@ SRC_URI = "file://recognize_face.py \
            file://collect_face.py \
 "
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     tensorflow-for-poets \
     python3-opencv \
     opencv-apps \

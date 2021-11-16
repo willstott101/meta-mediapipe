@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "65b65bc39ad8cab15039b35e5898455d3d66296d0584d96fe0e79d67d0
 
 BBCLASSEXTEND = "native"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     python3-requests-oauthlib \
     python3-oauthlib \
 "

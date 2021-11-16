@@ -7,7 +7,7 @@ SRC_URI += "file://minigo-bootstrap.sh \
             file://minigui-run.sh \
            "
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
         python3-absl \
         python3-six \
         python3-protobuf \
@@ -28,7 +28,7 @@ RDEPENDS_${PN} = "\
         bash \
         "
 
-RDEPENDS_${PN}-gui = "\
+RDEPENDS:${PN}-gui = "\
         minigo \
         python3-flask-socketio \
         "
@@ -43,5 +43,5 @@ do_install() {
 }
 
 PACKAGES =+ "${PN}-gui"
-FILES_${PN}-gui = "/opt/minigo/minigui/"
-FILES_${PN} = "/opt/minigo/"
+FILES:${PN}-gui = "/opt/minigo/minigui/"
+FILES:${PN} = "/opt/minigo/"

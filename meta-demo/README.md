@@ -38,7 +38,7 @@ $ git clone git://git.openembedded.org/bitbake
 2) Prepare build
 $ . <ts-project>/oe-core/oe-init-build-env <ts-build>
 $ echo 'MACHINE = "genericx86-64"' >> conf/local.conf
-$ echo 'DISTRO_FEATURES_append = " ts-demo x11"' >> conf/local.conf
+$ echo 'DISTRO_FEATURES:append = " ts-demo x11"' >> conf/local.conf
 $ echo 'TF_ARGS_EXTRA = "--config=v1"' >> conf/local.conf
 $ bitbake-layers add-layer <ts-project>/meta-openembedded/meta-python
 $ bitbake-layers add-layer <ts-project>/meta-openembedded/meta-oe

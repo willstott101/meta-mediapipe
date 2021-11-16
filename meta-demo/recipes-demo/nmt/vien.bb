@@ -1,6 +1,6 @@
 require nmt.inc
 
-SRC_URI_append = "file://download_iwslt15.sh \
+SRC_URI:append = "file://download_iwslt15.sh \
           "
 
 inherit ts_v1

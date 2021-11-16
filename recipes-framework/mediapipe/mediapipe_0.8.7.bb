@@ -20,7 +20,7 @@ DEPENDS = " \
     libusb1 \
 "
 # Copied from opencv_linux.BUILD
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     libopencv-core \
     libopencv-calib3d \
     libopencv-features2d \
@@ -60,7 +60,7 @@ export PYTHON_LIB_PATH="${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages"
 
 export CROSSTOOL_PYTHON_INCLUDE_PATH="${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}"
 
-do_configure_append () {
+do_configure:append () {
     if [ ! -e ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig-target.h ];then
         mv ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig.h ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig-target.h
     fi
@@ -186,10 +186,10 @@ do_install() {
     find ${D} -type d -empty -delete
 }
 
-FILES_${PN} = "/opt/mediapipe/* ${bindir}/* ${libdir}/*"
-INSANE_SKIP_${PN}-dev += " dev-elf "
+FILES:${PN} = "/opt/mediapipe/* ${bindir}/* ${libdir}/*"
+INSANE_SKIP:${PN}-dev += " dev-elf "
 
-# do_compile_append() {
+# do_compile:append() {
 #     chmod a+w ${BAZEL_DIR}/output_base/execroot/org_tensorflow/bazel-out/*/bin/tensorflow/lite/python/schema_py_srcs_no_include_all
 #     chmod a+w ${BAZEL_DIR}/output_base/execroot/org_tensorflow/bazel-out/*/bin/tensorflow/lite/python/schema_py_srcs_no_include_all/tflite
 # }

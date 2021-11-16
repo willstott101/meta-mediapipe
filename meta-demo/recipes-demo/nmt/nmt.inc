@@ -20,10 +20,10 @@ DEPENDS += " \
     python3-termcolor-native \
     tensorflow-estimator-native \
 "
-RDEPENDS_${PN} += "tensorflow \
+RDEPENDS:${PN} += "tensorflow \
                    python3 \
                    python3-numpy \
 "
 inherit python3native
 
-FILES_${PN} += "${libdir}/*"
+FILES:${PN} += "${libdir}/*"

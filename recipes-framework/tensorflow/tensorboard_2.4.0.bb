@@ -12,7 +12,7 @@ do_unpack[depends] += "python3-pip-native:do_populate_sysroot"
 SRC_URI[md5sum] = "26f82806bfe1f354233de9ef29e36fe0"
 SRC_URI[sha256sum] = "cde0c663a85609441cb4d624e7255fd8e2b6b1d679645095aac8a234a2812738"
 
-RDEPENDS_${PN} += "python3 \
+RDEPENDS:${PN} += "python3 \
            python3-core \
            python3-numpy \
            python3-protobuf \
@@ -45,4 +45,4 @@ do_install () {
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
-FILES_${PN} += "${libdir}/*"
+FILES:${PN} += "${libdir}/*"

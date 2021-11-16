@@ -5,7 +5,7 @@ inherit native
 export PYTHON_BIN_PATH="${PYTHON}"
 export PYTHON_LIB_PATH="${PYTHON_SITEPACKAGES_DIR}"
 
-do_configure_append () {
+do_configure:append () {
     ${TF_CONFIG} \
     ./configure
 }

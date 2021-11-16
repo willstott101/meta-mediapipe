@@ -96,7 +96,7 @@ load(
 )
 
 config_setting(
-    name = "yocto_armeabi",
+    name = "yocto:armeabi",
     values = {
         "cpu": "armeabi",
     },
@@ -104,7 +104,7 @@ config_setting(
 )
 
 config_setting(
-    name = "yocto_armv8",
+    name = "yocto:armv8",
     values = {
         "cpu": "armv8",
     },
@@ -112,7 +112,7 @@ config_setting(
 )
 
 config_setting(
-    name = "yocto_aarch64",
+    name = "yocto:aarch64",
     values = {
         "cpu": "aarch64",
     },
@@ -123,9 +123,9 @@ cc_library(
     name = "protobuf_lite",
     srcs = select({
         "//conditions:default": ["yocto/native/libprotobuf-lite.so"],
-        ":yocto_armeabi": ["yocto/libprotobuf-lite.so"],
-        ":yocto_armv8": ["yocto/libprotobuf-lite.so"],
-        ":yocto_aarch64": ["yocto/libprotobuf-lite.so"],
+        ":yocto:armeabi": ["yocto/libprotobuf-lite.so"],
+        ":yocto:armv8": ["yocto/libprotobuf-lite.so"],
+        ":yocto:aarch64": ["yocto/libprotobuf-lite.so"],
     }),
     hdrs = glob([
         "yocto/include/google/protobuf/*.h",
@@ -144,9 +144,9 @@ cc_library(
     name = "protobuf",
     srcs = select({
         "//conditions:default": ["yocto/native/libprotobuf.so"],
-        ":yocto_armeabi": ["yocto/libprotobuf.so"],
-        ":yocto_armv8": ["yocto/libprotobuf.so"],
-        ":yocto_aarch64": ["yocto/libprotobuf.so"],
+        ":yocto:armeabi": ["yocto/libprotobuf.so"],
+        ":yocto:armv8": ["yocto/libprotobuf.so"],
+        ":yocto:aarch64": ["yocto/libprotobuf.so"],
     }),
     hdrs = glob([
         "yocto/include/google/protobuf/*.h",

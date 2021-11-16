@@ -75,4 +75,4 @@ do_install() {
     install -m 0644 ${MODELS_DIR}/* ${D}/opt/minigo/models
 }
 
-FILES_${PN} = "/opt/minigo/models"
+FILES:${PN} = "/opt/minigo/models"

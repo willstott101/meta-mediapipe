@@ -21,7 +21,7 @@ SRC_URI += "https://storage.googleapis.com/download.tensorflow.org/models/tflite
 SRC_URI[model-mobv1.md5sum] = "38ac0c626947875bd311ef96c8baab62"
 SRC_URI[model-mobv1.sha256sum] = "2f8054076cf655e1a73778a49bd8fd0306d32b290b7e576dda9574f00f186c0f"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     python3 \
     python3-core \
     python3-numpy \
@@ -48,7 +48,7 @@ export PYTHON_LIB_PATH="${STAGING_LIBDIR_NATIVE}/${PYTHON_DIR}/site-packages"
 
 export CROSSTOOL_PYTHON_INCLUDE_PATH="${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}"
 
-do_configure_append () {
+do_configure:append () {
     if [ ! -e ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig-target.h ];then
         mv ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig.h ${CROSSTOOL_PYTHON_INCLUDE_PATH}/pyconfig-target.h
     fi
@@ -163,24 +163,24 @@ do_install() {
     )
 }
 
-FILES_${PN}-dev = ""
-INSANE_SKIP_${PN} += "dev-so \
+FILES:${PN}-dev = ""
+INSANE_SKIP:${PN} += "dev-so \
                       already-stripped \
                      "
 
 PACKAGE_BEFORE_PN += "libtensorflow-c libtensorflow-framework label-image label-image-lite python3-tensorflow"
 
-RDEPENDS_label-image += "libtensorflow-framework"
-RDEPENDS_python3-tensorflow += "libtensorflow-framework"
-RDEPENDS_${PN} += "libtensorflow-c libtensorflow-framework label-image label-image-lite python3-tensorflow"
+RDEPENDS:label-image += "libtensorflow-framework"
+RDEPENDS:python3-tensorflow += "libtensorflow-framework"
+RDEPENDS:${PN} += "libtensorflow-c libtensorflow-framework label-image label-image-lite python3-tensorflow"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
-FILES_python3-tensorflow += "${libdir}/* ${datadir}/* ${sbindir}/*"
-FILES_libtensorflow-c = "${libdir}/libtensorflow.so ${libdir}/libtensorflow_cc.so"
-FILES_libtensorflow-framework = "${libdir}/libtensorflow.so ${libdir}/libtensorflow_framework.so*"
-FILES_label-image = "${sbindir}/label_image"
-FILES_label-image-lite = "${sbindir}/label_image.lite"
+FILES:python3-tensorflow += "${libdir}/* ${datadir}/* ${sbindir}/*"
+FILES:libtensorflow-c = "${libdir}/libtensorflow.so ${libdir}/libtensorflow_cc.so"
+FILES:libtensorflow-framework = "${libdir}/libtensorflow.so ${libdir}/libtensorflow_framework.so*"
+FILES:label-image = "${sbindir}/label_image"
+FILES:label-image-lite = "${sbindir}/label_image.lite"
 
 inherit siteinfo unsupportarch
 python __anonymous() {

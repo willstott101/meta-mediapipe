@@ -37,7 +37,7 @@ DEPENDS += " \
     python3-termcolor-native \
     tensorflow-estimator-native \
 "
-RDEPENDS_${PN} += "tensorflow \
+RDEPENDS:${PN} += "tensorflow \
                    python3-core \
                    python3-pillow \
 "
@@ -98,7 +98,7 @@ do_install () {
         cp -rf ${SAMPLE_IMAGES} ${D}${datadir}/label_image/
 }
 
-FILES_${PN} += "${libdir}/* ${datadir}/*"
+FILES:${PN} += "${libdir}/* ${datadir}/*"
 
 inherit unsupportarch tensorflow_ver
 

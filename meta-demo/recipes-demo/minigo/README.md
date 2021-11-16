@@ -25,7 +25,7 @@ $ git clone git://git.openembedded.org/bitbake
 
 $ . <ts-project>/oe-core/oe-init-build-env <ts-build>
 $ echo 'MACHINE = "genericx86-64"' >> conf/local.conf
-$ echo 'IMAGE_INSTALL_append = " minigo minigo-gui minigo-models"' >> conf/local.conf
+$ echo 'IMAGE_INSTALL:append = " minigo minigo-gui minigo-models"' >> conf/local.conf
 
 $ bitbake add-layer <ts-project>/meta-openembedded/meta-python
 $ bitbake add-layer <ts-project>/meta-openembedded/meta-oe

@@ -12,7 +12,7 @@ inherit pypi
 SRC_URI[md5sum] = "d1f8a9284283b8db69e84c41b36db501"
 SRC_URI[sha256sum] = "0b0e026b412a0ad096e753907559e4bdb180d9ba9f68dd9036164db4fdc4ad2e"
 
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     python3-cachetools \
     python3-rsa \
     python3-pyasn1-modules \

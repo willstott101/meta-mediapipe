@@ -38,14 +38,14 @@ $ . <ts-project>/oe-init-build-env <ts-build>
 $ sed -i "s/BB_NO_NETWORK/#BB_NO_NETWORK/" conf/local.conf
 
 # Disable whitelist mechanism
-$ echo 'INHERIT_DISTRO_remove = "whitelist"' >> conf/local.conf
+$ echo 'INHERIT_DISTRO:remove = "whitelist"' >> conf/local.conf
 
 # Build tensorflow 1.x
 $ echo 'TF_ARGS_EXTRA = "--config=v1"' >> conf/local.conf
 
 # Install demo face-detection to image and enable distro feature
-$ echo 'IMAGE_INSTALL_append = " face-detection"' >> conf/local.conf
-$ echo 'DISTRO_FEATURES_append = " ts-demo"' >> conf/local.conf
+$ echo 'IMAGE_INSTALL:append = " face-detection"' >> conf/local.conf
+$ echo 'DISTRO_FEATURES:append = " ts-demo"' >> conf/local.conf
 
 # Add external layers
 $ bitbake-layers add-layer <ts-project>/meta-tensorflow
