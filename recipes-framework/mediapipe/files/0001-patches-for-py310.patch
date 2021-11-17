@@ -1,0 +1,21 @@
+From 638abb49e818811e9a6e9895d6061cdacb756485 Mon Sep 17 00:00:00 2001
+From: dan <dan@foo.bar>
+Date: Wed, 17 Nov 2021 10:42:53 +0000
+Subject: [PATCH] patches for py310
+
+---
+ WORKSPACE | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/WORKSPACE b/WORKSPACE
+index f08cfb4..bdc4717 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -416,6 +416,7 @@ http_archive(
+         "@//third_party:org_tensorflow_objc_cxx17.diff",
+         # Diff is generated with a script, don't update it manually.
+         "@//third_party:org_tensorflow_custom_ops.diff",
++        "@//:org_tensorflow_py310_fixes.diffforbazeltoapply",
+     ],
+     patch_args = [
+         "-p1",
