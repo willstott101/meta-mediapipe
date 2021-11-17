@@ -31,8 +31,8 @@ RDEPENDS:${PN} = " \
     libopencv-videoio \
 "
 
+SRCREV = "33d683c67100ef3db37d9752fcf65d30bea440c4"
 
-SRCREV = "710fb3de58dc10b7bc75f9cb758300c9016a5e4f"
 SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://BUILD.in \
            file://BUILD.yocto_compiler \
@@ -49,6 +49,8 @@ SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://protobuf_yocto.BUILD \
            file://com_google_protobuf_use_protoc_on_path.diffforbazeltoapply \
            file://0001-instruct-bazel-to-patch-libedgetpu.patch \
+           file://org_tensorflow_py310_fixes.diffforbazeltoapply \
+           file://0001-patches-for-py310.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -90,6 +92,8 @@ ENDOF
     install -m 644 ${WORKDIR}/protobuf_yocto.BUILD ${S}
     # We patch it's bazel scripts to just use the "protoc" on path rather then get the path from bazel.
     install -m 644 ${WORKDIR}/com_google_protobuf_use_protoc_on_path.diffforbazeltoapply ${S}
+    # Fixes for distutils.sysconfig being deprecated
+    install -m 644 ${WORKDIR}/org_tensorflow_py310_fixes.diffforbazeltoapply ${S}
 
     CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
     SED_COMMAND="s#%%CT_NAME%%#${CT_NAME}#g"
