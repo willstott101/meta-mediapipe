@@ -1,18 +1,17 @@
-From 8c834803b08196a79cbedaefb0a9a1c18b27c02d Mon Sep 17 00:00:00 2001
+From d90111ffe23f6836ffba866dc7f9fbfc84c3cd70 Mon Sep 17 00:00:00 2001
 From: "w.stott" <w.stott@engineeredarts.co.uk>
 Date: Thu, 19 Aug 2021 12:43:40 +0100
 Subject: [PATCH] Use yocto protobuf and ffmpeg
 
 ---
- WORKSPACE                                  |   19 +-
- 1 files changed, 9 insertions(+), 4 deletions(-)
- create mode 100644 third_party/protobuf_yocto.BUILD
+ WORKSPACE | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/WORKSPACE b/WORKSPACE
-index c383db8..b63bd62 100644
+index cbbb575..9fd27f5 100644
 --- a/WORKSPACE
 +++ b/WORKSPACE
-@@ -158,11 +158,16 @@ http_archive(
+@@ -151,11 +151,16 @@ http_archive(
      sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
      strip_prefix = "protobuf-3.11.4",
      urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz"],

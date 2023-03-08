@@ -1,4 +1,4 @@
-From f98624802729eb706faf06729290a0ad8da1ec82 Mon Sep 17 00:00:00 2001
+From bcfe9d3ac68137f2b6a95891e672a6c2924560ef Mon Sep 17 00:00:00 2001
 From: "w.stott" <w.stott@engineeredarts.co.uk>
 Date: Mon, 26 Jul 2021 13:48:04 +0100
 Subject: [PATCH] Yocto patches
@@ -9,7 +9,7 @@ Subject: [PATCH] Yocto patches
  2 files changed, 47 insertions(+)
 
 diff --git a/WORKSPACE b/WORKSPACE
-index a1dcb47..fb38c13 100644
+index 9dbbff3..aa24f74 100644
 --- a/WORKSPACE
 +++ b/WORKSPACE
 @@ -49,6 +49,25 @@ load("@rules_foreign_cc//:workspace_definitions.bzl", "rules_foreign_cc_dependen

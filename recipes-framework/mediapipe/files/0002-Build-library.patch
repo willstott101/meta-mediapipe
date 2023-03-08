@@ -1,4 +1,4 @@
-From e9cc946459068c3fcf11f5e2e0135619afaaa76d Mon Sep 17 00:00:00 2001
+From 5fbd78e8a8604b8d712077d127139af15c4b1dbc Mon Sep 17 00:00:00 2001
 From: "w.stott" <w.stott@engineeredarts.co.uk>
 Date: Fri, 30 Jul 2021 13:09:02 +0100
 Subject: [PATCH] Build library
@@ -6,12 +6,12 @@ Subject: [PATCH] Build library
 ---
  mediapipe/examples/desktop/libmediapipe/BUILD | 48 +++++++++++++++++++
  mediapipe/framework/BUILD                     |  1 +
- 2 files changed, 41 insertions(+)
+ 2 files changed, 49 insertions(+)
  create mode 100644 mediapipe/examples/desktop/libmediapipe/BUILD
 
 diff --git a/mediapipe/examples/desktop/libmediapipe/BUILD b/mediapipe/examples/desktop/libmediapipe/BUILD
 new file mode 100644
-index 0000000..e3ba725
+index 0000000..118c43f
 --- /dev/null
 +++ b/mediapipe/examples/desktop/libmediapipe/BUILD
 @@ -0,0 +1,48 @@
@@ -65,7 +65,7 @@ index 0000000..e3ba725
 +)
 \ No newline at end of file
 diff --git a/mediapipe/framework/BUILD b/mediapipe/framework/BUILD
-index c25e9d8..6e5d8f9 100644
+index 45e11e3..2c24e5d 100644
 --- a/mediapipe/framework/BUILD
 +++ b/mediapipe/framework/BUILD
 @@ -288,6 +288,7 @@ cc_library(
