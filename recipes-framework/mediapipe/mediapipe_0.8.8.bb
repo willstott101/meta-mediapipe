@@ -51,6 +51,7 @@ SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://0001-instruct-bazel-to-patch-libedgetpu.patch \
            file://org_tensorflow_py310_fixes.diffforbazeltoapply \
            file://0001-patches-for-py310.patch \
+           file://0007-Bugfix-for-broken-cc-rules-upstream.patch \
            "
 
 S = "${WORKDIR}/git"

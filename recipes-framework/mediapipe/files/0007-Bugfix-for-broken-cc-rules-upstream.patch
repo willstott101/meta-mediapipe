@@ -1,0 +1,24 @@
+From 5ea6d52b04c57dfa71951fbf7fb0fad2c3755633 Mon Sep 17 00:00:00 2001
+From: Will S <willstott101@gmail.com>
+Date: Wed, 8 Mar 2023 17:20:27 +0000
+Subject: [PATCH] Bugfix for broken cc rules upstream
+
+---
+ WORKSPACE | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/WORKSPACE b/WORKSPACE
+index bdc4717..47c5b10 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -35,8 +35,8 @@ http_archive(
+ 
+ http_archive(
+     name = "rules_cc",
+-    strip_prefix = "rules_cc-main",
+-    urls = ["https://github.com/bazelbuild/rules_cc/archive/main.zip"],
++    strip_prefix = "rules_cc-8bb0eb5c5ccd96b91753bb112096bb6993d16d13",
++    urls = ["https://github.com/bazelbuild/rules_cc/archive/8bb0eb5.zip"],
+ )
+ 
+ http_archive(
