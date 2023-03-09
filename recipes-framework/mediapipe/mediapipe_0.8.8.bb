@@ -7,7 +7,6 @@ DEPENDS = " \
     protobuf-native \
     util-linux-native \
     protobuf \
-    mesa \
     opencv \
     ffmpeg \
     python3 \
@@ -31,9 +30,12 @@ RDEPENDS:${PN} = " \
     libopencv-videoio \
 "
 
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'opengl', d)}"
+PACKAGECONFIG[opengl] = ",,mesa"
+
 SRCREV = "33d683c67100ef3db37d9752fcf65d30bea440c4"
 
-SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
+SRC_URI = "git://github.com/google/mediapipe.git;protocol=https;branch=master \
            file://BUILD.in \
            file://BUILD.yocto_compiler \
            file://cc_config.bzl.tpl \
@@ -45,6 +47,7 @@ SRC_URI = "git://github.com/google/mediapipe.git;branch=master \
            file://mediapipe-targets-release.cmake \
            file://mediapipe-targets.cmake \
            file://0002-Build-library.patch \
+           file://0008-mediapipe-cpu-target.patch \
            file://0003-Use-yocto-protobuf.patch \
            file://protobuf_yocto.BUILD \
            file://com_google_protobuf_use_protoc_on_path.diffforbazeltoapply \
@@ -105,8 +108,9 @@ ENDOF
                             ${S}/WORKSPACE
 }
 
-# MP_TARGET ??= "mediapipe/examples/desktop/face_detection:face_detection_gpu"
-MP_TARGET ??= "mediapipe/examples/desktop/libmediapipe:libmediapipe.so"
+MP_TARGET_PATH ??= "mediapipe/examples/desktop/${@bb.utils.contains('PACKAGECONFIG', 'opengl', 'libmediapipe', 'libmediapipe_cpu', d)}"
+# We hardcode the so name cause it's used in the do_install
+MP_TARGET_IDENTIFIER = "${MP_TARGET_PATH}:libmediapipe.so"
 
 do_compile[network] = "1"
 do_compile () {
@@ -115,6 +119,10 @@ do_compile () {
 
     protoc --version
     which protoc
+
+    FEATURE_ARGS="${@bb.utils.contains('PACKAGECONFIG', 'opengl', '', '--define MEDIAPIPE_DISABLE_GPU=1', d)}"
+
+    echo ${FEATURE_ARGS}
 
     # DEGL_NO_X11 is due to x11 headers being gammy - it doesn't actually prevent
     # EGL from using X11, via "default display" apis.
@@ -125,6 +133,7 @@ do_compile () {
         --define darwinn_portable=1 \
         --define MEDIAPIPE_EDGE_TPU=usb \
         --linkopt=-l:libusb-1.0.so \
+        ${FEATURE_ARGS} \
         --copt -DMEDIAPIPE_EDGE_TPU \
         --copt=-flax-vector-conversions \
         --subcommands --explain=${T}/explain.log \
@@ -133,13 +142,13 @@ do_compile () {
         --host_crosstool_top=@bazel_tools//tools/cpp:toolchain \
         --verbose_explanations \
         --verbose_failures \
-        ${MP_TARGET}
+        ${MP_TARGET_IDENTIFIER}
 }
 
 do_install() {
     # There are loads of .so files we don't want... so we have to filter by directory
     install -d ${D}${libdir}
-    install -m 755 ${S}/bazel-bin/mediapipe/examples/desktop/libmediapipe/libmediapipe.so \
+    install -m 755 ${S}/bazel-bin/${MP_TARGET_PATH}/libmediapipe.so \
         ${D}${libdir}/libmediapipe.so.${PV}
     # TODO: Don't hardcode .0 here and match it to the cmake ref too
     ln -s -r ${D}${libdir}/libmediapipe.so.${PV} ${D}${libdir}/libmediapipe.so.0

@@ -1,0 +1,65 @@
+commit caac2cd36937b5b90d84997786120e8a4b1bd581 (HEAD -> devtool)
+Author: Will S <willstott101@gmail.com>
+Date:   Thu Mar 9 09:24:29 2023 +0000
+
+    Add a libmediapipe_cpu BUILD file for non-gpu distros
+
+diff --git a/mediapipe/examples/desktop/libmediapipe_cpu/BUILD b/mediapipe/examples/desktop/libmediapipe_cpu/BUILD
+new file mode 100644
+index 0000000..429fdfd
+--- /dev/null
++++ b/mediapipe/examples/desktop/libmediapipe_cpu/BUILD
+@@ -0,0 +1,52 @@
++# Copyright 2021 The MediaPipe Authors.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++licenses(["notice"])
++
++package(default_visibility = ["//mediapipe/examples:__subpackages__"])
++
++cc_binary(
++    name = "libmediapipe.so",
++    deps = [
++        # Basic dependencies for image inference
++        "//mediapipe/framework:calculator_framework",
++        "//mediapipe/framework/formats:image_frame",
++        "//mediapipe/framework/port:parse_text_proto",
++        "//mediapipe/framework/port:status",
++        # GPU Helpers
++        # "//mediapipe/gpu:gl_calculator_helper",
++        # "//mediapipe/gpu:gpu_buffer",
++        # "//mediapipe/gpu:gpu_shared_data_internal",
++        # "//mediapipe/calculators/image:set_alpha_calculator",
++        # Stuff used by the GPU models we want
++        # "//mediapipe/graphs/face_detection:desktop_live_gpu_calculators",
++        # "//mediapipe/graphs/face_mesh:desktop_live_gpu_calculators",
++        # "//mediapipe/graphs/hand_tracking:mobile_calculators",
++        # "//mediapipe/graphs/pose_tracking:pose_tracking_gpu_deps",
++        # Stuff used by the CPU models we want
++        "//mediapipe/graphs/pose_tracking:pose_tracking_cpu_deps",
++        "//mediapipe/graphs/hand_tracking:desktop_tflite_calculators",
++        "//mediapipe/graphs/face_mesh:desktop_live_calculators",
++        # Stuff used by the TPU models we want
++        "//mediapipe/graphs/face_detection:desktop_live_calculators",
++        "//mediapipe/calculators/image:image_transformation_calculator",
++        "//mediapipe/calculators/tflite:tflite_converter_calculator",
++        "//mediapipe/calculators/tflite:tflite_inference_calculator",
++        "//mediapipe/calculators/tflite:ssd_anchors_calculator",
++        "//mediapipe/calculators/tflite:tflite_tensors_to_detections_calculator",
++        "//mediapipe/calculators/util:non_max_suppression_calculator",
++    ],
++    linkopts = ["-Wl,-soname,libmediapipe.so.0"],
++    linkshared = 1, ## important
++)
+\ No newline at end of file
