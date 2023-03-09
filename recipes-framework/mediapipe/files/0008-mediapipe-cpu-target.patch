@@ -9,7 +9,7 @@ new file mode 100644
 index 0000000..429fdfd
 --- /dev/null
 +++ b/mediapipe/examples/desktop/libmediapipe_cpu/BUILD
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,53 @@
 +# Copyright 2021 The MediaPipe Authors.
 +#
 +# Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,11 +36,11 @@ index 0000000..429fdfd
 +        "//mediapipe/framework/formats:image_frame",
 +        "//mediapipe/framework/port:parse_text_proto",
 +        "//mediapipe/framework/port:status",
++        "//mediapipe/calculators/image:set_alpha_calculator",
 +        # GPU Helpers
 +        # "//mediapipe/gpu:gl_calculator_helper",
 +        # "//mediapipe/gpu:gpu_buffer",
 +        # "//mediapipe/gpu:gpu_shared_data_internal",
-+        # "//mediapipe/calculators/image:set_alpha_calculator",
 +        # Stuff used by the GPU models we want
 +        # "//mediapipe/graphs/face_detection:desktop_live_gpu_calculators",
 +        # "//mediapipe/graphs/face_mesh:desktop_live_gpu_calculators",
@@ -49,6 +49,7 @@ index 0000000..429fdfd
 +        # Stuff used by the CPU models we want
 +        "//mediapipe/graphs/pose_tracking:pose_tracking_cpu_deps",
 +        "//mediapipe/graphs/hand_tracking:desktop_tflite_calculators",
++        "//mediapipe/graphs/face_detection:face_detection_full_range_desktop_live_deps",
 +        "//mediapipe/graphs/face_mesh:desktop_live_calculators",
 +        # Stuff used by the TPU models we want
 +        "//mediapipe/graphs/face_detection:desktop_live_calculators",
