@@ -8,7 +8,6 @@ DEPENDS = " \
     util-linux-native \
     protobuf \
     opencv \
-    ffmpeg \
     python3 \
     python3-numpy-native \
     python3-keras-applications-native \
