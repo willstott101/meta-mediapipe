@@ -107,6 +107,8 @@ ENDOF
 
 # MP_TARGET ??= "mediapipe/examples/desktop/face_detection:face_detection_gpu"
 MP_TARGET ??= "mediapipe/examples/desktop/libmediapipe:libmediapipe.so"
+
+do_compile[network] = "1"
 do_compile () {
     export CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
     unset CC
