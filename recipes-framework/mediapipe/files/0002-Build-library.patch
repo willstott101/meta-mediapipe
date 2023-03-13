@@ -1,6 +1,6 @@
 From 5fbd78e8a8604b8d712077d127139af15c4b1dbc Mon Sep 17 00:00:00 2001
 From: "w.stott" <w.stott@engineeredarts.co.uk>
-Date: Fri, 30 Jul 2021 13:09:02 +0100
+Date: Mon, 13 March 2023 13:09:02 +0100
 Subject: [PATCH] Build library
 
 ---
@@ -14,7 +14,7 @@ new file mode 100644
 index 0000000..118c43f
 --- /dev/null
 +++ b/mediapipe/examples/desktop/libmediapipe/BUILD
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,52 @@
 +# Copyright 2021 The MediaPipe Authors.
 +#
 +# Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,24 +41,28 @@ index 0000000..118c43f
 +        "//mediapipe/framework/formats:image_frame",
 +        "//mediapipe/framework/port:parse_text_proto",
 +        "//mediapipe/framework/port:status",
++        "//mediapipe/calculators/image:set_alpha_calculator",
 +        # GPU Helpers
 +        "//mediapipe/gpu:gl_calculator_helper",
 +        "//mediapipe/gpu:gpu_buffer",
 +        "//mediapipe/gpu:gpu_shared_data_internal",
-+        "//mediapipe/calculators/image:set_alpha_calculator",
 +        # Stuff used by the GPU models we want
-+        "//mediapipe/graphs/face_detection:desktop_live_gpu_calculators",
++        "//mediapipe/modules/face_detection:face_detection_short_range_gpu",
++        "//mediapipe/modules/face_detection:face_detection_full_range_gpu",
++        "//mediapipe/modules/holistic_landmark:holistic_landmark_gpu",
++        "//mediapipe/modules/hand_landmark:hand_landmark_tracking_gpu",
 +        "//mediapipe/graphs/face_mesh:desktop_live_gpu_calculators",
-+        "//mediapipe/graphs/hand_tracking:mobile_calculators",
 +        "//mediapipe/graphs/pose_tracking:pose_tracking_gpu_deps",
 +        # Stuff used by the TPU models we want
-+        "//mediapipe/graphs/face_detection:desktop_live_calculators",
++        "//mediapipe/modules/face_detection:face_detection_short_range_cpu",
++        "//mediapipe/modules/face_detection:face_detection_full_range_cpu",
 +        "//mediapipe/calculators/image:image_transformation_calculator",
 +        "//mediapipe/calculators/tflite:tflite_converter_calculator",
 +        "//mediapipe/calculators/tflite:tflite_inference_calculator",
 +        "//mediapipe/calculators/tflite:ssd_anchors_calculator",
 +        "//mediapipe/calculators/tflite:tflite_tensors_to_detections_calculator",
 +        "//mediapipe/calculators/util:non_max_suppression_calculator",
++        "//mediapipe/calculators/util:detection_letterbox_removal_calculator",
 +    ],
 +    linkopts = ["-Wl,-soname,libmediapipe.so.0"],
 +    linkshared = 1, ## important
