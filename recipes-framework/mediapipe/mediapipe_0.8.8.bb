@@ -33,6 +33,7 @@ PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'opengl', d)}"
 PACKAGECONFIG[opengl] = ",,mesa"
 
 SRCREV = "33d683c67100ef3db37d9752fcf65d30bea440c4"
+PR = "r1"
 
 SRC_URI = "git://github.com/google/mediapipe.git;protocol=https;branch=master \
            file://BUILD.in \
