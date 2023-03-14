@@ -33,7 +33,7 @@ PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'opengl', d)}"
 PACKAGECONFIG[opengl] = ",,mesa"
 
 SRCREV = "33d683c67100ef3db37d9752fcf65d30bea440c4"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "git://github.com/google/mediapipe.git;protocol=https;branch=master \
            file://BUILD.in \
@@ -55,6 +55,7 @@ SRC_URI = "git://github.com/google/mediapipe.git;protocol=https;branch=master \
            file://org_tensorflow_py310_fixes.diffforbazeltoapply \
            file://0001-patches-for-py310.patch \
            file://0007-Bugfix-for-broken-cc-rules-upstream.patch \
+           file://0001-Remove-MEDIAPIPE_OMIT_EGL_WINDOW_BIT-flag-and-autode.patch \
            "
 
 S = "${WORKDIR}/git"
