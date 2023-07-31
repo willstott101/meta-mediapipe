@@ -29,8 +29,8 @@ RDEPENDS:${PN} = " \
     libopencv-videoio \
 "
 
-#PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'opengl', d)}"
-#PACKAGECONFIG[opengl] = ",,mesa"
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'opengl', d)}"
+PACKAGECONFIG[opengl] = ",,mesa"
 
 SRCREV = "33d683c67100ef3db37d9752fcf65d30bea440c4"
 PR = "r4"
@@ -110,8 +110,8 @@ ENDOF
                             ${S}/WORKSPACE
 }
 
-#MP_TARGET_PATH ??= "mediapipe/examples/desktop/${@bb.utils.contains('PACKAGECONFIG', 'opengl', 'libmediapipe', 'libmediapipe_cpu', d)}"
-MP_TARGET_PATH ??= "mediapipe/examples/desktop/libmediapipe_cpu"
+MP_TARGET_PATH ??= "mediapipe/examples/desktop/${@bb.utils.contains('PACKAGECONFIG', 'opengl', 'libmediapipe', 'libmediapipe_cpu', d)}"
+#MP_TARGET_PATH ??= "mediapipe/examples/desktop/libmediapipe_cpu"
 # We hardcode the so name cause it's used in the do_install
 MP_TARGET_IDENTIFIER = "${MP_TARGET_PATH}:libmediapipe.so"
 
@@ -123,8 +123,8 @@ do_compile () {
     protoc --version
     which protoc
 
-    # FEATURE_ARGS="${@bb.utils.contains('PACKAGECONFIG', 'opengl', '', '--define MEDIAPIPE_DISABLE_GPU=1', d)}"
-    FEATURE_ARGS="--define MEDIAPIPE_DISABLE_GPU=1"
+    FEATURE_ARGS="${@bb.utils.contains('PACKAGECONFIG', 'opengl', '', '--define MEDIAPIPE_DISABLE_GPU=1', d)}"
+    # FEATURE_ARGS="--define MEDIAPIPE_DISABLE_GPU=1"
 
     echo ${FEATURE_ARGS}
 
