@@ -173,6 +173,12 @@ do_install() {
         install -D -m 644 ${S}/mediapipe/${f} ${D}/opt/mediapipe/${f}
     done
 
+    # QDH: Just include ALL text files
+    for f in $( find ${S}/mediapipe/modules/ -name '*.txt' -printf "%P\n" );
+    do
+        install -D -m 644 ${S}/mediapipe/modules/${f} ${D}/opt/mediapipe/modules/${f}
+    done
+
 
     # QDH: Just include ALL headers from the source - there seems no built-in way to get only
     # the relevant headers out from bazel.
