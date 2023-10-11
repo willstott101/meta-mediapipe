@@ -32,8 +32,8 @@ RDEPENDS:${PN} = " \
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'opengl', d)}"
 PACKAGECONFIG[opengl] = ",,mesa"
 
-SRCREV = "33d683c67100ef3db37d9752fcf65d30bea440c4"
-PR = "r4"
+SRCREV = "e6c19885c6d3c6f410c730952aeed2852790d306"
+# PR = "r1"
 
 SRC_URI = "git://github.com/google/mediapipe.git;protocol=https;branch=master \
            file://BUILD.in \
@@ -48,15 +48,11 @@ SRC_URI = "git://github.com/google/mediapipe.git;protocol=https;branch=master \
            file://mediapipe-targets.cmake \
            file://0002-Build-library.patch \
            file://0008-mediapipe-cpu-target.patch \
-           file://0003-Use-yocto-protobuf.patch \
            file://protobuf_yocto.BUILD \
            file://com_google_protobuf_use_protoc_on_path.diffforbazeltoapply \
            file://0001-instruct-bazel-to-patch-libedgetpu.patch \
-           file://org_tensorflow_py310_fixes.diffforbazeltoapply \
-           file://0001-patches-for-py310.patch \
            file://0007-Bugfix-for-broken-cc-rules-upstream.patch \
            file://0001-Remove-MEDIAPIPE_OMIT_EGL_WINDOW_BIT-flag-and-autode.patch \
-           file://0001-fix-TFLiteGPURunner-crash-on-Linux-when-use_advanced.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -98,8 +94,6 @@ ENDOF
     install -m 644 ${WORKDIR}/protobuf_yocto.BUILD ${S}
     # We patch it's bazel scripts to just use the "protoc" on path rather then get the path from bazel.
     install -m 644 ${WORKDIR}/com_google_protobuf_use_protoc_on_path.diffforbazeltoapply ${S}
-    # Fixes for distutils.sysconfig being deprecated
-    install -m 644 ${WORKDIR}/org_tensorflow_py310_fixes.diffforbazeltoapply ${S}
 
     CT_NAME=$(echo ${HOST_PREFIX} | rev | cut -c 2- | rev)
     SED_COMMAND="s#%%CT_NAME%%#${CT_NAME}#g"
