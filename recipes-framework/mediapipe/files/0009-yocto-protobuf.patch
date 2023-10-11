@@ -1,0 +1,32 @@
+From 7832f168313064122a81b91d7fe0154e0c872ef8 Mon Sep 17 00:00:00 2001
+From: Will S <willstott101@gmail.com>
+Date: Wed, 11 Oct 2023 14:28:29 +0100
+Subject: Use yocto protobuf
+
+---
+ WORKSPACE | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/WORKSPACE b/WORKSPACE
+index d010cdc9..36958ced 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -152,10 +152,15 @@ http_archive(
+     strip_prefix = "protobuf-3.19.1",
+     urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.19.1.tar.gz"],
+     patches = [
+-        "@//third_party:com_google_protobuf_fixes.diff"
++        "@//:com_google_protobuf_use_protoc_on_path.diffforbazeltoapply",
+     ],
+-    patch_args = [
+-        "-p1",
++    build_file = "@//:protobuf_yocto.BUILD",
++    patch_cmds = [
++        "mkdir -p yocto/include/google yocto/native",
++        "cp %%WORKDIR%%/recipe-sysroot/usr/lib/libprotobuf*.so yocto/",
++        "cp -r %%WORKDIR%%/recipe-sysroot/usr/include/google ./yocto/include/google",
++        "cp %%WORKDIR%%/recipe-sysroot-native/usr/bin/protoc ./yocto/native/protoc-native",
++        "cp %%WORKDIR%%/recipe-sysroot-native/usr/lib/libproto* ./yocto/native/",
+     ],
+ )
+ 
