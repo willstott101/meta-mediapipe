@@ -6,7 +6,7 @@ Subject: [PATCH] Build library
 ---
  mediapipe/examples/desktop/libmediapipe/BUILD | 48 +++++++++++++++++++
  mediapipe/framework/BUILD                     |  1 +
- 2 files changed, 49 insertions(+)
+ 2 files changed, 50 insertions(+)
  create mode 100644 mediapipe/examples/desktop/libmediapipe/BUILD
 
 diff --git a/mediapipe/examples/desktop/libmediapipe/BUILD b/mediapipe/examples/desktop/libmediapipe/BUILD
@@ -14,7 +14,7 @@ new file mode 100644
 index 0000000..118c43f
 --- /dev/null
 +++ b/mediapipe/examples/desktop/libmediapipe/BUILD
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,53 @@
 +# Copyright 2021 The MediaPipe Authors.
 +#
 +# Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,7 +53,8 @@ index 0000000..118c43f
 +        "//mediapipe/modules/hand_landmark:hand_landmark_tracking_gpu",
 +        "//mediapipe/graphs/face_mesh:desktop_live_gpu_calculators",
 +        "//mediapipe/graphs/pose_tracking:pose_tracking_gpu_deps",
-+        # Stuff used by the TPU models we want
++        # Stuff used by the CPU/TPU models we want
++        "//mediapipe/graphs/hand_tracking:desktop_tflite_calculators",
 +        "//mediapipe/modules/face_detection:face_detection_short_range_cpu",
 +        "//mediapipe/modules/face_detection:face_detection_full_range_cpu",
 +        "//mediapipe/calculators/image:image_transformation_calculator",
